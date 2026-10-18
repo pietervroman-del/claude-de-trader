@@ -1,61 +1,72 @@
 {
-    "start_eur":  500,
-    "started":  "2026-10-17T16:35:02Z",
-    "cash":  350,
-    "holdings":  {
-                     "BTC":  0.0020677256263727747
-                 },
-    "benchmark":  {
-                      "coin":  "BTC",
-                      "qty":  0.0068883955432910765,
-                      "price":  72295.5
-                  },
-    "trades":  [
-                   {
-                       "id":  "t20261017163515BTC",
-                       "time":  "2026-10-17T16:35:15Z",
-                       "side":  "buy",
-                       "coin":  "BTC",
-                       "qty":  0.0020677256263727747,
-                       "price":  72253.3,
-                       "eur":  150,
-                       "fee":  0.6,
-                       "reason":  "Hele markt onder SMA30 en 7d negatief; BTC is relatief het sterkst (-2,2% vs SMA30 tegen -7 tot -12% bij alts). Kleine startpositie (30%), 70% cash tot de trend keert."
-                   }
-               ],
-    "rounds":  [
-                   {
-                       "id":  "r202610171635",
-                       "time":  "2026-10-17T16:35:15Z",
-                       "value":  499.4,
-                       "benchmark":  497.71,
-                       "cash":  350,
-                       "positions":  {
-                                         "BTC":  149.40
-                                     },
-                       "note":  "Ronde 1: bearish markt, alts verliezen duidelijk van BTC. Plan: 30% BTC, rest cash. Bijkopen als BTC terug boven SMA30 sluit; stop-loss mentaal op -8% van instap. Geen alts zolang ze zwakker zijn dan BTC."
-                   },
-                   {
-                       "id":  "r202610171809",
-                       "time":  "2026-10-17T18:09:43Z",
-                       "value":  499.84,
-                       "benchmark":  499.17,
-                       "cash":  350,
-                       "positions":  {
-                                         "BTC":  149.84
-                                     },
-                       "note":  "Ronde 2: geen trades. BTC (72.466) blijft 2% onder SMA30, alts zakken verder (7d -4 tot -12%) en blijven zwakker dan BTC. Plan ongewijzigd: 30% BTC, 70% cash; bijkopen tot ~60% BTC pas als BTC boven SMA30 sluit, stop-loss mentaal -8% van instap (~66.700). Alts pas overwegen als ze BTC weer outperformen."
-                   },
-                   {
-                       "id":  "r202610180650",
-                       "time":  "2026-10-18T06:50:13Z",
-                       "value":  500.23,
-                       "benchmark":  500.46,
-                       "cash":  350,
-                       "positions":  {
-                                         "BTC":  150.23
-                                     },
-                       "note":  "Ronde 3: geen trades. BTC (72.653) blijft 1,8% onder SMA30 en de alts zakken verder weg (7d -5 tot -13%, DOGE/XRP ~10% onder SMA30), dus BTC blijft de sterkste munt. Plan ongewijzigd: 30% BTC, 70% cash; bijkopen tot ~60% BTC pas als BTC boven SMA30 sluit (~74.000), mentale stop-loss rond 66.700. Alts pas als ze BTC een week outperformen."
-                   }
-               ]
+  "start_eur": 500,
+  "started": "2026-10-17T16:35:02Z",
+  "cash": 350,
+  "holdings": {
+    "BTC": 0.0020677256263727747
+  },
+  "benchmark": {
+    "coin": "BTC",
+    "qty": 0.0068883955432910765,
+    "price": 72295.5
+  },
+  "trades": [
+    {
+      "id": "t20261017163515BTC",
+      "time": "2026-10-17T16:35:15Z",
+      "side": "buy",
+      "coin": "BTC",
+      "qty": 0.0020677256263727747,
+      "price": 72253.3,
+      "eur": 150,
+      "fee": 0.6,
+      "reason": "Hele markt onder SMA30 en 7d negatief; BTC is relatief het sterkst (-2,2% vs SMA30 tegen -7 tot -12% bij alts). Kleine startpositie (30%), 70% cash tot de trend keert."
+    }
+  ],
+  "rounds": [
+    {
+      "id": "r202610171635",
+      "time": "2026-10-17T16:35:15Z",
+      "value": 499.4,
+      "benchmark": 497.71,
+      "cash": 350,
+      "positions": {
+        "BTC": 149.4
+      },
+      "note": "Ronde 1: bearish markt, alts verliezen duidelijk van BTC. Plan: 30% BTC, rest cash. Bijkopen als BTC terug boven SMA30 sluit; stop-loss mentaal op -8% van instap. Geen alts zolang ze zwakker zijn dan BTC."
+    },
+    {
+      "id": "r202610171809",
+      "time": "2026-10-17T18:09:43Z",
+      "value": 499.84,
+      "benchmark": 499.17,
+      "cash": 350,
+      "positions": {
+        "BTC": 149.84
+      },
+      "note": "Ronde 2: geen trades. BTC (72.466) blijft 2% onder SMA30, alts zakken verder (7d -4 tot -12%) en blijven zwakker dan BTC. Plan ongewijzigd: 30% BTC, 70% cash; bijkopen tot ~60% BTC pas als BTC boven SMA30 sluit, stop-loss mentaal -8% van instap (~66.700). Alts pas overwegen als ze BTC weer outperformen."
+    },
+    {
+      "id": "r202610180650",
+      "time": "2026-10-18T06:50:13Z",
+      "value": 500.23,
+      "benchmark": 500.46,
+      "cash": 350,
+      "positions": {
+        "BTC": 150.23
+      },
+      "note": "Ronde 3: geen trades. BTC (72.653) blijft 1,8% onder SMA30 en de alts zakken verder weg (7d -5 tot -13%, DOGE/XRP ~10% onder SMA30), dus BTC blijft de sterkste munt. Plan ongewijzigd: 30% BTC, 70% cash; bijkopen tot ~60% BTC pas als BTC boven SMA30 sluit (~74.000), mentale stop-loss rond 66.700. Alts pas als ze BTC een week outperformen."
+    },
+    {
+      "id": "r202610181602",
+      "time": "2026-10-18T16:02:50Z",
+      "value": 499.21,
+      "benchmark": 497.07,
+      "cash": 350,
+      "positions": {
+        "BTC": 149.21
+      },
+      "note": "Ronde 4: geen trades. BTC (72.154) zakt licht naar 2,5% onder SMA30, alts verzwakken verder (7d -7 tot -15%, DOT -4% op 24u), dus geen reden om risico bij te zetten. Plan ongewijzigd: 30% BTC, 70% cash; bijkopen tot ~60% BTC pas bij sluiting boven SMA30 (~74.000), mentale stop-loss rond 66.700. Alts pas als ze BTC een week outperformen."
+    }
+  ]
 }
