@@ -1,65 +1,65 @@
 {
  "start_eur": 500,
  "started": "2026-10-17T16:35:02Z",
- "updated": "2026-10-18T07:17:13Z",
+ "updated": "2026-10-18T08:36:01Z",
  "fee": 0.004,
  "cash": 350,
- "value": 500.21,
- "benchmark": 500.39,
+ "value": 500.27,
+ "benchmark": 500.62,
  "benchmark_coin": "BTC",
  "positions": [
   {
    "coin": "BTC",
    "qty": 0.0020677256263727747,
-   "price": 72643.1,
-   "eur": 150.21
+   "price": 72675.2,
+   "eur": 150.27
   }
  ],
  "market": [
   {
    "coin": "BTC",
-   "price": 72646.0,
-   "ch24": 0.26
+   "price": 72675.6,
+   "ch24": 0.3
   },
   {
    "coin": "ETH",
-   "price": 2142.85,
-   "ch24": 0.29
+   "price": 2144.6,
+   "ch24": 0.37
   },
   {
    "coin": "SOL",
-   "price": 92.07,
-   "ch24": 0.05
+   "price": 91.81,
+   "ch24": -0.23
   },
   {
    "coin": "XRP",
-   "price": 1.15179,
-   "ch24": 0.08
+   "price": 1.14847,
+   "ch24": -0.2
   },
   {
    "coin": "ADA",
-   "price": 0.195523,
-   "ch24": 0.13
+   "price": 0.194714,
+   "ch24": -0.29
   },
   {
    "coin": "DOGE",
-   "price": 0.0704577,
-   "ch24": -0.06
+   "price": 0.0702277,
+   "ch24": -0.39
   },
   {
    "coin": "LINK",
-   "price": 10.66348,
-   "ch24": -0.02
+   "price": 10.62812,
+   "ch24": -0.35
   },
   {
    "coin": "AVAX",
-   "price": 8.694,
-   "ch24": 0.16
+   "price": 8.689,
+   "ch24": 0.1
   },
   {
    "coin": "DOT",
-   "price": 0.982,
-   "ch24": -0.81
+   "price": 0.9807,
+   "ch24": -0.94
   }
  ],
  "trades": [
