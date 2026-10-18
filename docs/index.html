@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Claude handelt zelfstandig met een virtuele €500 op echte Kraken-koersen, tegen BTC kopen en houden.">
+<title>Claude de Trader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+/* Layout: a trading journal. Scoreboard first, then the race chart, then positions and the reasoning log in two columns. */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --ink:#15202b; --muted:#5d6b7a; --line:#d5dce3;
+  --accent:#2b4fd8; --bench:#a2672a; --up:#13855b; --down:#c23b3b; --soft:#e3e8f6;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10161d; --surface:#18212b; --ink:#e6ecf2; --muted:#93a1b0; --line:#2b3642;
+  --accent:#7d98ff; --bench:#e0a565; --up:#3ccf91; --down:#ff7a7a; --soft:#202c48; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10161d; --surface:#18212b; --ink:#e6ecf2; --muted:#93a1b0; --line:#2b3642;
+  --accent:#7d98ff; --bench:#e0a565; --up:#3ccf91; --down:#ff7a7a; --soft:#202c48; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body)}
+.wrap{max-width:1080px;margin:0 auto;padding-block:28px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:grid;gap:22px}
+.num,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+h1{font:700 clamp(30px,5vw,46px)/1.05 var(--display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font:600 12px/1 var(--body);text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin:0 0 12px}
+header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px}
+header p{margin:6px 0 0;color:var(--muted);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;background:var(--surface);
+  border:1px solid var(--line);font:500 12.5px var(--mono);color:var(--muted)}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--up)}
+.pill.stale i{background:var(--bench)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;min-width:0}
+.score{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0}
+.score>div{padding:4px 18px;border-left:1px solid var(--line)}
+.score>div:first-child{border-left:0;padding-left:0}
+.score .k{font-size:12.5px;color:var(--muted)}
+.score .v{font:500 30px/1.15 var(--mono);font-variant-numeric:tabular-nums;margin-top:4px}
+.score .s{font:500 13px var(--mono);margin-top:2px}
+.up{color:var(--up)} .down{color:var(--down)}
+.verdict{font:500 clamp(18px,2.4vw,22px)/1.3 var(--display);margin:0}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:8px}
+.legend span::before{content:"";display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:7px;vertical-align:middle;background:currentColor}
+.legend .a{color:var(--accent)} .legend .b{color:var(--bench)}
+.legend em{font-style:normal;color:var(--muted)}
+.cols{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:22px;align-items:start}
+@media (max-width:820px){.cols{grid-template-columns:1fr}.score>div{border-left:0;padding-left:0;padding-block:8px}}
+.alloc{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--soft);margin:2px 0 14px}
+.alloc b{display:block;height:100%}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font:500 11.5px var(--body);text-transform:uppercase;letter-spacing:.07em;color:var(--muted);text-align:left;padding:0 0 8px}
+td{padding:8px 0;border-top:1px solid var(--line)}
+td.r,th.r{text-align:right}
+.dot{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:8px;vertical-align:baseline}
+.stack{display:grid;gap:22px}
+.log{display:grid;gap:0}
+.entry{display:grid;grid-template-columns:92px minmax(0,1fr);gap:14px;padding:14px 0;border-top:1px solid var(--line)}
+.entry:first-child{border-top:0;padding-top:0}
+.entry time{font:500 12px/1.4 var(--mono);color:var(--muted)}
+.entry time b{display:block;color:var(--ink);font-weight:500}
+.entry p{margin:0;max-width:68ch}
+.entry .meta{font:500 12.5px var(--mono);color:var(--muted);margin-top:6px}
+.chip{display:inline-block;font:600 11px/1 var(--mono);letter-spacing:.05em;padding:4px 7px;border-radius:5px;margin-right:8px;vertical-align:1px}
+.chip.buy{background:color-mix(in srgb,var(--up) 16%,transparent);color:var(--up)}
+.chip.sell{background:color-mix(in srgb,var(--down) 16%,transparent);color:var(--down)}
+.chip.round{background:var(--soft);color:var(--accent)}
+.trade{margin-top:8px;padding:9px 12px;border-radius:7px;background:var(--bg);font-size:14px}
+.market{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px 18px;font-size:14px}
+.market div{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px solid var(--line)}
+.rules{margin:0;padding-left:18px;color:var(--muted);display:grid;gap:4px;max-width:70ch}
+.empty{color:var(--muted);margin:0}
+footer{color:var(--muted);font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Claude de Trader</h1>
+      <p>Papertrading-experiment met een virtuele €500 en echte Kraken-koersen. Claude neemt elke beslissing zelf en schrijft bij elke ronde op waarom.</p>
+    </div>
+    <span class="pill" id="fresh"><i></i><span id="freshTxt">gegevens laden…</span></span>
+  </header>
+
+  <section class="panel">
+    <div class="score">
+      <div><div class="k">Portefeuille</div><div class="v" id="sValue">—</div><div class="s" id="sPct">&nbsp;</div></div>
+      <div><div class="k" id="bLabel">Benchmark: BTC kopen en houden</div><div class="v" id="sBench">—</div><div class="s" id="sBenchPct">&nbsp;</div></div>
+      <div><div class="k">Stand van de wedstrijd</div><p class="verdict" id="sVerdict" style="margin-top:6px">Nog geen gegevens.</p></div>
+    </div>
+  </section>
+
+  <section class="panel chart">
+    <h2>Verloop per ronde</h2>
+    <div id="chart"><p class="empty">De grafiek verschijnt zodra de eerste ronde gelogd is.</p></div>
+    <div class="legend"><span class="a">Claude</span><span class="b">BTC kopen en houden</span><em>stippellijn = startkapitaal €500</em></div>
+  </section>
+
+  <div class="cols">
+    <div class="stack">
+      <section class="panel">
+        <h2>Posities</h2>
+        <div class="alloc" id="alloc"></div>
+        <table><thead><tr><th>Munt</th><th class="r">Aantal</th><th class="r">Waarde</th><th class="r">Aandeel</th></tr></thead>
+        <tbody id="pos"><tr><td colspan="4" class="empty">Nog geen posities.</td></tr></tbody></table>
+      </section>
+      <section class="panel">
+        <h2>Markt bij laatste ronde · 24u</h2>
+        <div class="market" id="market"><p class="empty">Nog geen koersen.</p></div>
+      </section>
+      <section class="panel">
+        <h2>Spelregels</h2>
+        <ol class="rules">
+          <li>Start met €500 virtueel geld op 17 oktober 2026.</li>
+          <li>Enkel spot: kopen en verkopen, geen hefboom en geen short.</li>
+          <li>Prijzen zijn de echte bied- en laatkoersen van Kraken in euro.</li>
+          <li>Elke trade kost 0,40% fee, zoals bij Kraken voor kleine volumes.</li>
+          <li>Claude kiest zelf uit BTC, ETH, SOL, XRP, ADA, DOGE, LINK, AVAX en DOT.</li>
+          <li>Te kloppen: €500 in BTC op dag één, gewoon laten staan.</li>
+        </ol>
+      </section>
+    </div>
+    <section class="panel">
+      <h2>Logboek</h2>
+      <div class="log" id="log"><p class="empty">Hier komt elke ronde met Claudes analyse en de trades die eruit volgden.</p></div>
+    </section>
+  </div>
+
+  <footer id="foot">Geen echt geld, geen beleggingsadvies. Puur een experiment.</footer>
+</div>
+
+<script>
+const COLORS={BTC:"#e8912d",ETH:"#6274e0",SOL:"#9b5de5",XRP:"#3a8fb7",ADA:"#2f6fd6",DOGE:"#c9a227",LINK:"#2a5ada",AVAX:"#d64545",DOT:"#d63c8a",CASH:"var(--line)"};
+const eur=n=>"€"+Number(n).toLocaleString("nl-BE",{minimumFractionDigits:2,maximumFractionDigits:2});
+const pct=n=>(n>=0?"+":"")+n.toLocaleString("nl-BE",{minimumFractionDigits:2,maximumFractionDigits:2})+"%";
+const cls=n=>n>=0?"up":"down";
+const dt=s=>new Date(s);
+const fmtDay=d=>d.toLocaleDateString("nl-BE",{day:"numeric",month:"short"});
+const fmtTime=d=>d.toLocaleTimeString("nl-BE",{hour:"2-digit",minute:"2-digit"});
+const qtyFmt=q=>q>=1?q.toLocaleString("nl-BE",{maximumFractionDigits:2}):q.toPrecision(4);
+const el=(id)=>document.getElementById(id);
+function esc(s){const d=document.createElement("div");d.textContent=s??"";return d.innerHTML}
+
+function render(s){
+  const start=s.start_eur||500;
+  const vp=(s.value/start-1)*100, bp=(s.benchmark/start-1)*100;
+  el("sValue").textContent=eur(s.value);
+  el("sPct").innerHTML=`<span class="${cls(vp)}">${pct(vp)}</span> sinds start`;
+  el("sBench").textContent=eur(s.benchmark);
+  el("sBenchPct").innerHTML=`<span class="${cls(bp)}">${pct(bp)}</span> sinds start`;
+  const diff=s.value-s.benchmark;
+  el("sVerdict").innerHTML=Math.abs(diff)<0.5?"Gelijkspel met de benchmark.":
+    diff>0?`Claude staat <span class="up">${eur(diff)}</span> voor op kopen en houden.`:
+           `Claude staat <span class="down">${eur(-diff)}</span> achter op kopen en houden.`;
+
+  const upd=dt(s.updated), age=(Date.now()-upd)/36e5;
+  el("fresh").classList.toggle("stale",age>8);
+  el("freshTxt").textContent=`bijgewerkt ${fmtDay(upd)} ${fmtTime(upd)}`;
+
+  // posities
+  const parts=[...(s.positions||[]).map(p=>({coin:p.coin,qty:p.qty,eur:p.eur})),{coin:"CASH",qty:null,eur:s.cash}];
+  el("alloc").innerHTML=parts.filter(p=>p.eur>0).map(p=>`<b title="${p.coin}" style="width:${p.eur/s.value*100}%;background:${COLORS[p.coin]||"var(--accent)"}"></b>`).join("");
+  el("pos").innerHTML=parts.map(p=>`<tr><td><span class="dot" style="background:${COLORS[p.coin]||"var(--accent)"}"></span>${p.coin==="CASH"?"Cash (EUR)":p.coin}</td>
+    <td class="r num">${p.qty==null?"—":qtyFmt(p.qty)}</td><td class="r num">${eur(p.eur)}</td><td class="r num">${(p.eur/s.value*100).toFixed(0)}%</td></tr>`).join("");
+
+  // markt
+  if(s.market?.length) el("market").innerHTML=s.market.map(m=>`<div><span>${m.coin}</span><span class="num ${cls(m.ch24)}">${pct(m.ch24)}</span></div>`).join("");
+
+  // logboek: rondes nieuwste eerst, met de trades die ervoor vielen
+  const rounds=[...(s.rounds||[])].sort((a,b)=>a.time<b.time?1:-1);
+  const trades=[...(s.trades||[])].sort((a,b)=>a.time<b.time?1:-1);
+  if(rounds.length){
+    el("log").innerHTML=rounds.map((r,i)=>{
+      const prev=rounds[i+1]?.time||"";
+      const tr=trades.filter(t=>t.time<=r.time&&t.time>prev);
+      const d=dt(r.time);
+      return `<article class="entry"><time><b>${fmtDay(d)}</b>${fmtTime(d)}</time><div>
+        <p><span class="chip round">RONDE ${rounds.length-i}</span>${esc(r.note)}</p>
+        ${tr.map(t=>`<div class="trade"><span class="chip ${t.side}">${t.side==="buy"?"KOOP":"VERKOOP"}</span><span class="num">${t.coin} ${eur(t.eur)} @ ${Number(t.price).toLocaleString("nl-BE")}</span><br>${esc(t.reason)}</div>`).join("")}
+        <div class="meta">waarde ${eur(r.value)} · benchmark ${eur(r.benchmark)} · cash ${eur(r.cash)}</div></div></article>`;
+    }).join("");
+  }
+  drawChart(s);
+}
+
+function drawChart(s){
+  const pts=[{t:s.started,v:s.start_eur,b:s.start_eur},...(s.rounds||[]).map(r=>({t:r.time,v:r.value,b:r.benchmark}))];
+  if(s.updated>(pts.at(-1)?.t||"")) pts.push({t:s.updated,v:s.value,b:s.benchmark});
+  if(pts.length<2){return}
+  const W=1000,H=300,L=58,R=14,T=14,B=30;
+  const t0=+dt(pts[0].t), t1=Math.max(+dt(pts.at(-1).t),t0+36e5);
+  let lo=Math.min(...pts.flatMap(p=>[p.v,p.b]),s.start_eur), hi=Math.max(...pts.flatMap(p=>[p.v,p.b]),s.start_eur);
+  const pad=Math.max((hi-lo)*0.15,2.5); lo-=pad; hi+=pad;
+  const step=[1,2,5,10,20,25,50,100].find(x=>(hi-lo)/x<=6)||100;
+  const x=t=>L+(+dt(t)-t0)/(t1-t0)*(W-L-R), y=v=>T+(hi-v)/(hi-lo)*(H-T-B);
+  let g="";
+  for(let v=Math.ceil(lo/step)*step; v<=hi; v+=step){
+    g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/>`+
+       `<text x="${L-8}" y="${y(v)+4}" text-anchor="end" font-size="12" fill="var(--muted)" font-family="var(--mono)">€${v}</text>`;
+  }
+  const days=Math.max(1,Math.round((t1-t0)/864e5)); const n=Math.min(6,days+1);
+  for(let i=0;i<n;i++){const tt=t0+(t1-t0)*i/Math.max(1,n-1);
+    g+=`<text x="${L+(tt-t0)/(t1-t0)*(W-L-R)}" y="${H-8}" text-anchor="${i===0?"start":i===n-1?"end":"middle"}" font-size="12" fill="var(--muted)" font-family="var(--mono)">${days<2?fmtTime(new Date(tt)):fmtDay(new Date(tt))}</text>`}
+  const line=k=>pts.map((p,i)=>`${i?"L":"M"}${x(p.t).toFixed(1)},${y(p[k]).toFixed(1)}`).join("");
+  const area=line("v")+`L${x(pts.at(-1).t)},${H-B}L${x(pts[0].t)},${H-B}Z`;
+  const last=pts.at(-1);
+  el("chart").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Waarde van Claude tegenover de benchmark">
+    ${g}
+    <line x1="${L}" x2="${W-R}" y1="${y(s.start_eur)}" y2="${y(s.start_eur)}" stroke="var(--muted)" stroke-dasharray="4 5" stroke-width="1.2"/>
+    <path d="${area}" fill="var(--accent)" fill-opacity=".09"/>
+    <path d="${line("b")}" fill="none" stroke="var(--bench)" stroke-width="2"/>
+    <path d="${line("v")}" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linejoin="round"/>
+    <circle cx="${x(last.t)}" cy="${y(last.v)}" r="5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>
+    <circle cx="${x(last.t)}" cy="${y(last.b)}" r="4" fill="var(--bench)" stroke="var(--surface)" stroke-width="2"/>
+  </svg>`;
+}
+
+async function load(){
+  try{
+    const r=await fetch("data.json?t="+Date.now(),{cache:"no-store"});
+    if(!r.ok) throw new Error(r.status);
+    render(await r.json());
+  }catch(e){el("freshTxt").textContent="gegevens konden niet geladen worden"}
+}
+load();
+setInterval(load,5*60*1000);
+</script>
+</body>
+</html>
