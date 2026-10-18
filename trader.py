@@ -6,6 +6,7 @@ Gebruik:
   python trader.py sell SOL all "reden"         verkoop alles (of een EUR-bedrag)
   python trader.py round "analyse en plan"      log een ronde (ook zonder trade)
   python trader.py export                       schrijf docs/data.json voor het dashboard
+  python trader.py snapshot                     schrijf data/market.json (draait in GitHub Actions)
 """
 import json
 import sys
@@ -16,6 +17,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 STATE = ROOT / "data" / "state.json"
 PUBLIC = ROOT / "docs" / "data.json"
+MARKET = ROOT / "data" / "market.json"
 FEE = 0.004  # Kraken taker fee voor kleine volumes
 
 PAIRS = {
@@ -34,18 +36,48 @@ def kraken(path):
     return data["result"]
 
 
-def tickers():
+def live_tickers():
     res = kraken("Ticker?pair=" + ",".join(PAIRS.values()))
     return {c: {"ask": float(res[p]["a"][0]), "bid": float(res[p]["b"][0]),
                 "last": float(res[p]["c"][0]), "open24": float(res[p]["o"])}
             for c, p in PAIRS.items()}
 
 
-def weekly(pair):
+def live_weekly(pair):
     res = kraken(f"OHLC?pair={pair}&interval=1440")
     rows = next(v for k, v in res.items() if k != "last")
     closes = [float(r[4]) for r in rows]
     return {"ch7": (closes[-1] / closes[-8] - 1) * 100, "sma30": sum(closes[-30:]) / 30}
+
+
+# Niet elke omgeving mag Kraken bereiken (de Claude-cloud niet). Dan gebruiken we
+# de laatste momentopname die GitHub Actions in data/market.json zet.
+_snapshot = None
+
+
+def snapshot():
+    global _snapshot
+    if _snapshot is None:
+        _snapshot = json.loads(MARKET.read_text(encoding="utf-8"))
+        print(f"[Kraken niet bereikbaar: koersen uit momentopname van {_snapshot['time']}]", file=sys.stderr)
+    return _snapshot
+
+
+def tickers():
+    try:
+        return live_tickers()
+    except OSError:
+        return snapshot()["tickers"]
+
+
+def weekly(pair):
+    coin = next(c for c, p in PAIRS.items() if p == pair)
+    if _snapshot is not None:
+        return _snapshot["weekly"][coin]
+    try:
+        return live_weekly(pair)
+    except OSError:
+        return snapshot()["weekly"][coin]
 
 
 def now():
@@ -143,8 +175,16 @@ def cmd_export(s, tk):
     print(f"docs/data.json geschreven (waarde EUR {v:.2f})")
 
 
+def cmd_snapshot():
+    snap = {"time": now(), "tickers": live_tickers(), "weekly": {c: live_weekly(p) for c, p in PAIRS.items()}}
+    MARKET.write_text(json.dumps(snap, indent=1) + "\n", encoding="utf-8")
+    print(f"data/market.json geschreven ({snap['time']})")
+
+
 def main(argv):
     cmd = argv[1] if len(argv) > 1 else "status"
+    if cmd == "snapshot":
+        return cmd_snapshot()
     s, tk = load(), tickers()
     if cmd == "status":
         cmd_status(s, tk)

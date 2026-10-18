@@ -3,7 +3,13 @@
 Papertrading-experiment met virtueel geld (start €500 op 17 okt 2026). Geen echt account, geen echte trades.
 Koersen komen live van de publieke Kraken-API. Publiek dashboard: `docs/index.html` (GitHub Pages) leest `docs/data.json`.
 
+De Claude-cloud mag api.kraken.com niet bereiken. Daarom haalt GitHub Actions (`.github/workflows/market.yml`)
+om 07:00, 13:00 en 19:00 UTC de koersen op in `data/market.json`. `trader.py` gebruikt automatisch die momentopname
+als Kraken onbereikbaar is; trades worden dan uitgevoerd aan die koersen. Dat is de afgesproken spelregel, geen fout.
+
 ## Stappen
+0. `git pull -q origin main` om de nieuwste koersen en staat te hebben. Is `data/market.json` ouder dan 3 uur,
+   handel dan niet, log geen ronde, en meld dat de koersen verouderd zijn.
 1. `python3 trader.py status`: koersen, 24u/7d, afstand tot SMA30, portefeuille.
 2. Lees de laatste 3 rondes en de posities in `data/state.json` om je eigen plan te kennen.
 3. Beslis zelf. Volledige vrijheid binnen de spelregels: spot only, munten BTC ETH SOL XRP ADA DOGE LINK AVAX DOT, fee 0,4%.
