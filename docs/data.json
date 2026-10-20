@@ -1,65 +1,65 @@
 {
  "start_eur": 500,
  "started": "2026-10-17T16:35:02Z",
- "updated": "2026-10-18T16:02:50Z",
+ "updated": "2026-10-20T19:44:32Z",
  "fee": 0.004,
  "cash": 350,
- "value": 499.21,
- "benchmark": 497.07,
+ "value": 501.89,
+ "benchmark": 506.01,
  "benchmark_coin": "BTC",
  "positions": [
   {
    "coin": "BTC",
    "qty": 0.0020677256263727747,
-   "price": 72160.2,
-   "eur": 149.21
+   "price": 73458.1,
+   "eur": 151.89
   }
  ],
  "market": [
   {
    "coin": "BTC",
-   "price": 72154.4,
-   "ch24": -0.42
+   "price": 73439.7,
+   "ch24": 0.62
   },
   {
    "coin": "ETH",
-   "price": 2111.02,
-   "ch24": -1.2
+   "price": 2167.44,
+   "ch24": 1.05
   },
   {
    "coin": "SOL",
-   "price": 90.75,
-   "ch24": -1.38
+   "price": 94.22,
+   "ch24": 0.67
   },
   {
    "coin": "XRP",
-   "price": 1.13134,
-   "ch24": -1.69
+   "price": 1.17947,
+   "ch24": 1.53
   },
   {
    "coin": "ADA",
-   "price": 0.191782,
-   "ch24": -1.79
+   "price": 0.196506,
+   "ch24": 1.1
   },
   {
    "coin": "DOGE",
-   "price": 0.0687405,
-   "ch24": -2.5
+   "price": 0.0724759,
+   "ch24": 2.07
   },
   {
    "coin": "LINK",
-   "price": 10.44875,
-   "ch24": -2.03
+   "price": 10.84545,
+   "ch24": 0.93
   },
   {
    "coin": "AVAX",
-   "price": 8.475,
-   "ch24": -2.36
+   "price": 8.576,
+   "ch24": 1.02
   },
   {
    "coin": "DOT",
-   "price": 0.9501,
-   "ch24": -4.03
+   "price": 1.0297,
+   "ch24": 0.18
   }
  ],
  "trades": [
@@ -119,6 +119,17 @@
     "BTC": 149.21
    },
    "note": "Ronde 4: geen trades. BTC (72.154) zakt licht naar 2,5% onder SMA30, alts verzwakken verder (7d -7 tot -15%, DOT -4% op 24u), dus geen reden om risico bij te zetten. Plan ongewijzigd: 30% BTC, 70% cash; bijkopen tot ~60% BTC pas bij sluiting boven SMA30 (~74.000), mentale stop-loss rond 66.700. Alts pas als ze BTC een week outperformen."
+  },
+  {
+   "id": "r202610201944",
+   "time": "2026-10-20T19:44:32Z",
+   "value": 501.89,
+   "benchmark": 506.01,
+   "cash": 350,
+   "positions": {
+    "BTC": 151.89
+   },
+   "note": "Ronde 5: geen trades. BTC (73.440) herstelt naar 1% onder SMA30 (~74.200), maar sluit er nog niet boven; alts blijven zwakker (7d -1 tot -7%, 6 tot 9% onder SMA30). Plan ongewijzigd: 30% BTC, 70% cash; bijkopen tot ~60% BTC zodra BTC boven ~74.200 noteert, mentale stop-loss rond 66.700. Alts pas als ze BTC een week outperformen."
   }
  ]
 }
