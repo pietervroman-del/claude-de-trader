@@ -89,6 +89,17 @@
         "BTC": 148.7
       },
       "note": "Ronde 6: geen trades. BTC (71.912) zakt terug naar 2,7% onder SMA30 en alts blijven zwakker (7d -0 tot -9%, AVAX/ADA/LINK 13% onder SMA30); geen trigger geraakt. Plan ongewijzigd: 30% BTC, 70% cash; bijkopen tot ~60% BTC zodra BTC boven SMA30 (~74.000) noteert, mentale stop-loss rond 66.700. Alts pas als ze BTC een week outperformen."
+    },
+    {
+      "id": "r202610251309",
+      "time": "2026-10-25T13:09:44Z",
+      "value": 498.35,
+      "benchmark": 494.2,
+      "cash": 350,
+      "positions": {
+        "BTC": 148.35
+      },
+      "note": "Ronde 7: geen trades. BTC (71.730) blijft 2,9% onder SMA30 (~73.900) en alts verzwakken verder (7d -1 tot -10%, AVAX/ADA/LINK 13 tot 14% onder SMA30); geen trigger geraakt. Plan ongewijzigd: 30% BTC, 70% cash; bijkopen tot ~60% BTC zodra BTC boven SMA30 (~73.900) noteert, mentale stop-loss rond 66.700. Alts pas als ze BTC een week outperformen."
     }
   ]
 }
