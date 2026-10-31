@@ -1,65 +1,65 @@
 {
  "start_eur": 500,
  "started": "2026-10-17T16:35:02Z",
- "updated": "2026-10-30T13:09:43Z",
+ "updated": "2026-10-31T06:43:35Z",
  "fee": 0.004,
  "cash": 350,
- "value": 492.92,
- "benchmark": 476.13,
+ "value": 493.1,
+ "benchmark": 476.71,
  "benchmark_coin": "BTC",
  "positions": [
   {
    "coin": "BTC",
    "qty": 0.0020677256263727747,
-   "price": 69120.8,
-   "eur": 142.92
+   "price": 69205.2,
+   "eur": 143.1
   }
  ],
  "market": [
   {
    "coin": "BTC",
-   "price": 69123.3,
-   "ch24": -0.66
+   "price": 69205.3,
+   "ch24": -0.01
   },
   {
    "coin": "ETH",
-   "price": 1994.55,
-   "ch24": -0.84
+   "price": 2009.56,
+   "ch24": 0.0
   },
   {
    "coin": "SOL",
-   "price": 86.38,
-   "ch24": 1.27
+   "price": 85.98,
+   "ch24": -0.26
   },
   {
    "coin": "XRP",
-   "price": 1.1122,
-   "ch24": 0.73
+   "price": 1.11719,
+   "ch24": -0.69
   },
   {
    "coin": "ADA",
-   "price": 0.172613,
-   "ch24": 1.7
+   "price": 0.173481,
+   "ch24": -0.78
   },
   {
    "coin": "DOGE",
-   "price": 0.0677013,
-   "ch24": 0.8
+   "price": 0.0676018,
+   "ch24": -0.67
   },
   {
    "coin": "LINK",
-   "price": 9.8924,
-   "ch24": 4.41
+   "price": 10.26231,
+   "ch24": 0.01
   },
   {
    "coin": "AVAX",
-   "price": 7.347,
-   "ch24": -0.35
+   "price": 7.622,
+   "ch24": -0.31
   },
   {
    "coin": "DOT",
-   "price": 0.846,
-   "ch24": 4.21
+   "price": 0.858,
+   "ch24": -1.74
   }
  ],
  "trades": [
@@ -196,6 +196,17 @@
     "BTC": 142.92
    },
    "note": "Ronde 11: geen trades. BTC (69.120) zakt verder, 7d -4,6% en 5,9% onder SMA30 (~73.400), maar nog boven de stop van 66.700; alts blijven zwakker (7d -3 tot -13%, AVAX/DOT/ADA 15 tot 17% onder SMA30), LINK/DOT 24u-opleving telt nog niet als trendkeer. Plan ongewijzigd: 30% BTC, 70% cash; bijkopen tot ~60% BTC pas als BTC weer boven SMA30 (~73.400) sluit, BTC-positie verkopen onder 66.700. Alts pas als ze BTC een week outperformen."
+  },
+  {
+   "id": "r202610310643",
+   "time": "2026-10-31T06:43:35Z",
+   "value": 493.1,
+   "benchmark": 476.71,
+   "cash": 350,
+   "positions": {
+    "BTC": 143.1
+   },
+   "note": "Ronde 12: geen trades. BTC (69.205) stabiliseert op 24u (0,0%) maar blijft 7d -4,1% en 5,5% onder SMA30 (~73.200), ruim boven de stop van 66.700; alts blijven zwakker (7d -1 tot -8%, ADA/DOT/AVAX 13 tot 14% onder SMA30). Plan ongewijzigd: 30% BTC, 70% cash; bijkopen tot ~60% BTC pas als BTC weer boven SMA30 (~73.200) sluit, BTC-positie verkopen onder 66.700. Alts pas als ze BTC een week outperformen."
   }
  ]
 }
