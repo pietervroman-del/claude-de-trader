@@ -188,6 +188,17 @@
         "BTC": 144.31
       },
       "note": "Ronde 15: geen trades. BTC (69.790) blijft vlak (24u +0,5%, 7d -2,2%) en 4,5% onder SMA30 (~73.050), ruim boven de stop van 66.700; alts blijven zwak (DOT/ADA 14% onder SMA30, SOL 7d -5,9%). LINK outperformt BTC nog (7d +2,1% tegen -2,2%) maar zakt verder onder SMA30 (5,9%, SMA ~11,05), dus geen instap. Plan ongewijzigd: 30% BTC, 70% cash; bijkopen tot ~60% BTC als BTC boven SMA30 (~73.000) sluit, BTC verkopen onder 66.700; LINK-positie (~10%) pas boven ~11,05."
+    },
+    {
+      "id": "r202611020713",
+      "time": "2026-11-02T07:13:03Z",
+      "value": 494.32,
+      "benchmark": 480.79,
+      "cash": 350,
+      "positions": {
+        "BTC": 144.32
+      },
+      "note": "Ronde 16: geen trades. BTC (69.790) blijft vlak (24u -0,6%, 7d -2,5%) en 4,2% onder SMA30 (~72.850), ruim boven de stop van 66.700; alts blijven zwakker (ADA/DOT 14% en AVAX 12% onder SMA30, SOL 7d -6,6%). LINK outperformt BTC nog licht (7d -0,8% tegen -2,5%) maar staat 7,9% onder SMA30 (~10,98), dus geen instap. Plan ongewijzigd: 30% BTC, 70% cash; bijkopen tot ~60% BTC als BTC boven SMA30 (~72.850) sluit, BTC verkopen onder 66.700; LINK (~10%) pas boven ~11,00."
     }
   ]
 }
