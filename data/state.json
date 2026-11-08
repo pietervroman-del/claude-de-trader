@@ -364,6 +364,17 @@
         "BTC": 140.98
       },
       "note": "Ronde 31: geen trades. BTC (68.175) vlak (24u +0,2%, 7d -2,9%), 4,7% onder SMA30 (~71.500) en 2,2% boven de stop van 66.700; de alts blijven zwak (XRP -6,7%, ADA -6,4%, AVAX -5,8% op 7d) en zitten 8 tot 14% onder SMA30, ETH (2.010) 4,7% eronder. LINK (9,63) nog ver onder 11,00. Plan ongewijzigd: 30% BTC, 70% cash; BTC verkopen onder 66.700, bijkopen tot ~60% BTC pas als BTC boven SMA30 (~71.500) sluit; LINK (~10%) pas boven ~11,00."
+    },
+    {
+      "id": "r202611081909",
+      "time": "2026-11-08T19:09:41Z",
+      "value": 490.63,
+      "benchmark": 468.48,
+      "cash": 350,
+      "positions": {
+        "BTC": 140.63
+      },
+      "note": "Ronde 32: geen trades. BTC (68.010) vlak (24u 0,0%, 7d -3,1%), 5,0% onder SMA30 (~71.600) en 2,0% boven de stop van 66.700; de alts blijven zwak (XRP -7,7%, ADA -6,6%, DOT -6,1% op 7d) en zitten 9 tot 15% onder SMA30, ETH (2.001) 5,0% eronder. LINK (9,59) nog ver onder 11,00. Plan ongewijzigd: 30% BTC, 70% cash; BTC verkopen onder 66.700, bijkopen tot ~60% BTC pas als BTC boven SMA30 (~71.600) sluit; LINK (~10%) pas boven ~11,00."
     }
   ]
 }
