@@ -1,65 +1,65 @@
 {
  "start_eur": 500,
  "started": "2026-10-17T16:35:02Z",
- "updated": "2026-11-07T19:09:27Z",
+ "updated": "2026-11-08T08:58:05Z",
  "fee": 0.004,
  "cash": 350,
- "value": 490.53,
- "benchmark": 468.17,
+ "value": 490.79,
+ "benchmark": 469.01,
  "benchmark_coin": "BTC",
  "positions": [
   {
    "coin": "BTC",
    "qty": 0.0020677256263727747,
-   "price": 67964.7,
-   "eur": 140.53
+   "price": 68087.0,
+   "eur": 140.79
   }
  ],
  "market": [
   {
    "coin": "BTC",
-   "price": 67966.4,
-   "ch24": -0.03
+   "price": 68087.1,
+   "ch24": 0.08
   },
   {
    "coin": "ETH",
-   "price": 2003.37,
-   "ch24": -0.18
+   "price": 2007.84,
+   "ch24": -0.04
   },
   {
    "coin": "SOL",
-   "price": 80.41,
-   "ch24": -0.49
+   "price": 80.08,
+   "ch24": -0.52
   },
   {
    "coin": "XRP",
-   "price": 1.04253,
-   "ch24": -1.38
+   "price": 1.04384,
+   "ch24": 0.02
   },
   {
    "coin": "ADA",
-   "price": 0.163274,
-   "ch24": -1.1
+   "price": 0.161855,
+   "ch24": -0.69
   },
   {
    "coin": "DOGE",
-   "price": 0.0644464,
-   "ch24": -0.71
+   "price": 0.0638251,
+   "ch24": -0.56
   },
   {
    "coin": "LINK",
-   "price": 9.74699,
-   "ch24": 0.29
+   "price": 9.63364,
+   "ch24": -0.82
   },
   {
    "coin": "AVAX",
-   "price": 7.388,
-   "ch24": -1.1
+   "price": 7.332,
+   "ch24": -0.35
   },
   {
    "coin": "DOT",
-   "price": 0.8085,
-   "ch24": -0.86
+   "price": 0.8019,
+   "ch24": -0.4
   }
  ],
  "trades": [
@@ -394,6 +394,17 @@
     "BTC": 140.53
    },
    "note": "Ronde 29: geen trades. BTC (67.970) vlak (24u 0,0%, 7d -2,1%), 5,3% onder SMA30 (~71.800) en 1,9% boven de stop van 66.700; de alts blijven zwak (XRP -1,4%, ADA/AVAX -1,1%) en zitten 8 tot 15% onder SMA30, ETH (2.003) 5,3% eronder. LINK (9,76) nog ver onder 11,00. Plan ongewijzigd: 30% BTC, 70% cash; BTC verkopen onder 66.700, bijkopen tot ~60% BTC pas als BTC boven SMA30 (~71.800) sluit; LINK (~10%) pas boven ~11,00."
+  },
+  {
+   "id": "r202611080858",
+   "time": "2026-11-08T08:58:05Z",
+   "value": 490.79,
+   "benchmark": 469.01,
+   "cash": 350,
+   "positions": {
+    "BTC": 140.79
+   },
+   "note": "Ronde 30: geen trades. BTC (68.090) vlak (24u +0,1%, 7d -3,0%), 4,9% onder SMA30 (~71.600) en 2,1% boven de stop van 66.700; de alts blijven zwak (XRP -6,9%, ADA -6,5% op 7d) en zitten 8 tot 15% onder SMA30, ETH (2.008) 4,8% eronder. LINK (9,63) nog ver onder 11,00. Plan ongewijzigd: 30% BTC, 70% cash; BTC verkopen onder 66.700, bijkopen tot ~60% BTC pas als BTC boven SMA30 (~71.600) sluit; LINK (~10%) pas boven ~11,00."
   }
  ]
 }
