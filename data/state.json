@@ -393,6 +393,15 @@
       "cash": 487.38,
       "positions": {},
       "note": "Ronde 33: BTC-positie verkocht op de stop (BTC 66.695 onder 66.700; 24u -0,6%, 7d -2,7%, 6,4% onder SMA30 ~71.300). Alts blijven zwakker (XRP -12,8%, DOT -7,2% op 7d, 9 tot 16% onder SMA30); alleen AVAX (+8,5% 24u) toont kracht maar staat nog 5% onder SMA30. Plan: 100% cash; BTC terugkopen (~30%) pas als BTC boven 69.500 herstelt, naar ~60% als BTC boven SMA30 (~71.300) sluit; LINK (~10%) pas boven ~11,00."
+    },
+    {
+      "id": "r202611091909",
+      "time": "2026-11-09T19:09:54Z",
+      "value": 487.38,
+      "benchmark": 458.44,
+      "cash": 487.38,
+      "positions": {},
+      "note": "Ronde 34: geen trades, 100% cash. BTC (66.566) zakt verder (24u -0,8%, 7d -2,9%) en staat 6,6% onder SMA30 (~71.300); alts blijven zwak (XRP -12,6%, DOT -7,6% op 7d, 9 tot 16% onder SMA30), alleen AVAX (+7,6% 24u) veert op maar zit nog 6% onder SMA30. Plan ongewijzigd: BTC terugkopen (~30%) pas boven 69.500, naar ~60% als BTC boven SMA30 (~71.300) sluit; LINK (~10%) pas boven ~11,00; AVAX alleen als het boven SMA30 (~8,15) sluit."
     }
   ]
 }

@@ -1,58 +1,58 @@
 {
  "start_eur": 500,
  "started": "2026-10-17T16:35:02Z",
- "updated": "2026-11-09T18:12:23Z",
+ "updated": "2026-11-09T19:09:54Z",
  "fee": 0.004,
  "cash": 487.38,
  "value": 487.38,
- "benchmark": 459.52,
+ "benchmark": 458.44,
  "benchmark_coin": "BTC",
  "positions": [],
  "market": [
   {
    "coin": "BTC",
-   "price": 66708.8,
-   "ch24": -0.56
+   "price": 66551.1,
+   "ch24": -0.8
   },
   {
    "coin": "ETH",
-   "price": 1897.08,
-   "ch24": -0.52
+   "price": 1892.91,
+   "ch24": -0.74
   },
   {
    "coin": "SOL",
-   "price": 77.35,
-   "ch24": -0.28
+   "price": 77.22,
+   "ch24": -0.45
   },
   {
    "coin": "XRP",
-   "price": 0.97258,
-   "ch24": -2.48
+   "price": 0.97448,
+   "ch24": -2.29
   },
   {
    "coin": "ADA",
-   "price": 0.159208,
-   "ch24": 1.38
+   "price": 0.159285,
+   "ch24": 1.43
   },
   {
    "coin": "DOGE",
-   "price": 0.062415,
-   "ch24": 0.97
+   "price": 0.062365,
+   "ch24": 0.89
   },
   {
    "coin": "LINK",
-   "price": 9.48213,
-   "ch24": 1.61
+   "price": 9.51313,
+   "ch24": 1.95
   },
   {
    "coin": "AVAX",
-   "price": 7.71,
-   "ch24": 8.47
+   "price": 7.646,
+   "ch24": 7.57
   },
   {
    "coin": "DOT",
-   "price": 0.7772,
-   "ch24": 0.5
+   "price": 0.774,
+   "ch24": 0.09
   }
  ],
  "trades": [
@@ -440,6 +440,15 @@
    "cash": 487.38,
    "positions": {},
    "note": "Ronde 33: BTC-positie verkocht op de stop (BTC 66.695 onder 66.700; 24u -0,6%, 7d -2,7%, 6,4% onder SMA30 ~71.300). Alts blijven zwakker (XRP -12,8%, DOT -7,2% op 7d, 9 tot 16% onder SMA30); alleen AVAX (+8,5% 24u) toont kracht maar staat nog 5% onder SMA30. Plan: 100% cash; BTC terugkopen (~30%) pas als BTC boven 69.500 herstelt, naar ~60% als BTC boven SMA30 (~71.300) sluit; LINK (~10%) pas boven ~11,00."
+  },
+  {
+   "id": "r202611091909",
+   "time": "2026-11-09T19:09:54Z",
+   "value": 487.38,
+   "benchmark": 458.44,
+   "cash": 487.38,
+   "positions": {},
+   "note": "Ronde 34: geen trades, 100% cash. BTC (66.566) zakt verder (24u -0,8%, 7d -2,9%) en staat 6,6% onder SMA30 (~71.300); alts blijven zwak (XRP -12,6%, DOT -7,6% op 7d, 9 tot 16% onder SMA30), alleen AVAX (+7,6% 24u) veert op maar zit nog 6% onder SMA30. Plan ongewijzigd: BTC terugkopen (~30%) pas boven 69.500, naar ~60% als BTC boven SMA30 (~71.300) sluit; LINK (~10%) pas boven ~11,00; AVAX alleen als het boven SMA30 (~8,15) sluit."
   }
  ]
 }
