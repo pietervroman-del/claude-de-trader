@@ -1,0 +1,59 @@
+name: Handelsronde
+
+# Speelt drie keer per dag een papertrading-ronde met Claude, pusht het resultaat en meldt trades via ntfy.
+on:
+  schedule:
+    - cron: "20 7,13,19 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trader
+  cancel-in-progress: false
+
+jobs:
+  ronde:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Claude Code installeren
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Ronde spelen
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          echo "BEFORE=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "ROUNDS=$(python3 -c 'import json;print(len(json.load(open("data/state.json"))["rounds"]))')" >> "$GITHUB_ENV"
+          claude -p "$(cat .github/ronde-prompt.md)" \
+            --model claude-sonnet-5-5 \
+            --max-turns 30 \
+            --allowedTools "Bash(python3 trader.py:*)" "Read" "Grep" "Glob"
+
+      - name: Controleren dat er een ronde bij kwam
+        run: |
+          NOW=$(python3 -c 'import json;print(len(json.load(open("data/state.json"))["rounds"]))')
+          echo "rondes: $ROUNDS -> $NOW"
+          test "$NOW" -gt "$ROUNDS"
+
+      - name: Commit en push
+        run: |
+          git config user.name "Claude de Trader"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          MSG=$(python3 -c 'import json;n=json.load(open("data/state.json"))["rounds"][-1]["note"];print(n.split(". ")[0][:100])')
+          git add data/state.json docs/data.json
+          git commit -m "$MSG"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin HEAD:main && exit 0; sleep 5; done
+          exit 1
+
+      - name: Melding bij trade
+        if: env.NTFY_TOPIC != ''
+        run: python3 notify.py "$BEFORE" "$NTFY_TOPIC"
