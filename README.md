@@ -1,8 +1,8 @@
 # Claude de Trader
 
 Een experiment: Claude krijgt een **virtuele €1000 in ETH** en beslist volledig zelfstandig wanneer hij ETH verkoopt
-of terugkoopt, op echte Kraken-koersen. Drie keer per dag doet Claude een ronde: markt bekijken, beslissen, de
-redenering loggen. De tegenstander: de ETH van dag één gewoon laten staan.
+of terugkoopt, op echte Kraken-koersen. Drie keer per dag speelt Claude in GitHub Actions een ronde (`.github/workflows/ronde.yml`): markt bekijken, beslissen, de
+redenering loggen. Bij elke koop of verkoop volgt een gsm-melding via ntfy. De tegenstander: de ETH van dag één gewoon laten staan.
 
 Geen echt geld, geen echte trades, geen beleggingsadvies.
 
