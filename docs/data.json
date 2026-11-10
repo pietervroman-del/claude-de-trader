@@ -1,11 +1,11 @@
 {
  "start_eur": 1000.0,
  "started": "2026-11-10T17:18:20Z",
- "updated": "2026-11-10T17:18:33Z",
+ "updated": "2026-11-10T17:47:20Z",
  "fee": 0.004,
  "cash": 398.4,
- "value": 998.78,
- "benchmark": 1000.38,
+ "value": 997.47,
+ "benchmark": 998.19,
  "benchmark_coin": "ETH",
  "tradable": [
   "ETH"
@@ -14,55 +14,55 @@
   {
    "coin": "ETH",
    "qty": 0.3303054797103355,
-   "price": 1817.65,
-   "eur": 600.38
+   "price": 1813.68,
+   "eur": 599.07
   }
  ],
  "market": [
   {
    "coin": "BTC",
-   "price": 65509.6,
-   "ch24": -2.33
+   "price": 65456.3,
+   "ch24": -2.41
   },
   {
    "coin": "ETH",
-   "price": 1817.92,
-   "ch24": -4.35
+   "price": 1811.62,
+   "ch24": -4.68
   },
   {
    "coin": "SOL",
-   "price": 73.81,
-   "ch24": -4.35
+   "price": 73.61,
+   "ch24": -4.61
   },
   {
    "coin": "XRP",
-   "price": 0.93903,
-   "ch24": -4.13
+   "price": 0.9442,
+   "ch24": -3.6
   },
   {
    "coin": "ADA",
-   "price": 0.154766,
-   "ch24": -2.11
+   "price": 0.154045,
+   "ch24": -2.57
   },
   {
    "coin": "DOGE",
-   "price": 0.0601892,
-   "ch24": -3.44
+   "price": 0.0599604,
+   "ch24": -3.81
   },
   {
    "coin": "LINK",
-   "price": 9.16105,
-   "ch24": -3.47
+   "price": 9.1447,
+   "ch24": -3.64
   },
   {
    "coin": "AVAX",
-   "price": 7.364,
-   "ch24": -4.34
+   "price": 7.372,
+   "ch24": -4.23
   },
   {
    "coin": "DOT",
-   "price": 0.7527,
-   "ch24": -1.27
+   "price": 0.7506,
+   "ch24": -1.55
   }
  ],
  "trades": [
@@ -100,6 +100,17 @@
     "ETH": 600.38
    },
    "note": "Ronde 1: ETH in duidelijke downtrend (30d -20%, -12,6% onder SMA30) maar oververkocht (RSI 29) net boven de 30d-bodem van 1.795. 40% verkocht, 60% ETH aangehouden. Plan: rest verkopen als ETH onder 1.750 zakt (nieuwe bodem); terugkopen tot 100% als ETH terug boven SMA7 (~1.970) sluit."
+  },
+  {
+   "id": "r202611101747",
+   "time": "2026-11-10T17:47:20Z",
+   "value": 997.47,
+   "benchmark": 998.19,
+   "cash": 398.4,
+   "positions": {
+    "ETH": 599.07
+   },
+   "note": "Ronde 2: Geen trades; ETH 1.812 zakt tegen de 30d-bodem (1.795), RSI 28 diep oververkocht, 12,8% onder SMA30. Positie blijft 60% ETH / 40% cash. Breekt ETH onder 1.795 op dagbasis, dan nog 20% van de ETH verkopen; herstelt ETH boven SMA7 (~1.970), dan cash terug inzetten tot circa 80% ETH."
   }
  ]
 }
