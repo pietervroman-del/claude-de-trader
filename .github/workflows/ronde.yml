@@ -29,7 +29,9 @@ jobs:
 
       - name: Ronde spelen
         env:
+          # een van beide volstaat: een API-sleutel, of een token van je Claude-abonnement (claude setup-token)
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: |
           echo "BEFORE=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
           echo "ROUNDS=$(python3 -c 'import json;print(len(json.load(open("data/state.json"))["rounds"]))')" >> "$GITHUB_ENV"
