@@ -1,0 +1,30 @@
+name: Melding bij trade
+
+# Kijkt bij elke push van een ronde of er trades bijkwamen en stuurt dan een gsm-melding via ntfy.
+on:
+  push:
+    branches: [main]
+    paths: [data/state.json]
+  workflow_dispatch:
+    inputs:
+      test:
+        description: "Stuur een testmelding"
+        type: boolean
+        default: true
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Testmelding
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          curl -s -H "Title: Claude de Trader: testmelding" -H "Tags: white_check_mark" \
+            -H "Click: https://pietervroman-del.github.io/claude-de-trader/" \
+            -d "Meldingen werken. Je krijgt er een bij elke koop of verkoop." "https://ntfy.sh/${{ secrets.NTFY_TOPIC }}"
+      - name: Nieuwe trades melden
+        if: github.event_name == 'push'
+        run: python3 notify.py "${{ github.event.before }}" "${{ secrets.NTFY_TOPIC }}"
