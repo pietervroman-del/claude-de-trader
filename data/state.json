@@ -46,6 +46,17 @@
         "ETH": 2430.44
       },
       "note": "Ronde 1: overgang naar ETH/USDC met 2 ETH als startkapitaal; de 60/40-verdeling uit het vorige spel blijft (1,2 ETH + 1.620 USDC). ETH (2.025) staat net boven de 30d-bodem van 2.002 en 12,9% onder SMA30, RSI 29 is oververkocht. Plan ongewijzigd: sluit ETH op dagbasis onder 2.000, dan nog een vijfde van de ETH naar USDC; herstelt ETH boven SMA7 (~2.200), dan USDC terug inzetten tot ongeveer 80% ETH. Doel: meer dan 2 ETH waard zijn."
+    },
+    {
+      "id": "r202611101756",
+      "time": "2026-11-10T17:56:47Z",
+      "value": 4055.68,
+      "benchmark": 4058.58,
+      "cash": 1620.54,
+      "positions": {
+        "ETH": 2435.15
+      },
+      "note": "Ronde 2: Geen trades. ETH 2.028 staat 12,8% onder SMA30 (2.326), RSI 29 oververkocht en net boven de 30d-bodem van 2.002. Plan ongewijzigd: sluit ETH op dagbasis onder 2.000, dan een vijfde van de ETH naar USDC; herstel boven SMA7 (~2.200) betekent USDC terug inzetten tot ca. 80% ETH. Fees van 0,4% maken tussentijds schuiven zonder signaal nadelig."
     }
   ]
 }
