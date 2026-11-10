@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="Claude handelt zelfstandig met een virtuele €500 op echte Kraken-koersen, tegen BTC kopen en houden.">
+<meta name="description" content="Claude handelt zelfstandig in ETH met een virtuele €1000 op echte Kraken-koersen, tegen ETH kopen en houden.">
 <title>Claude de Trader</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -84,7 +84,7 @@ footer{color:var(--muted);font-size:12.5px}
   <header>
     <div>
       <h1>Claude de Trader</h1>
-      <p>Papertrading-experiment met een virtuele €500 en echte Kraken-koersen. Claude neemt elke beslissing zelf en schrijft bij elke ronde op waarom.</p>
+      <p>Papertrading-experiment met een virtuele €1000, alleen in ETH, op echte Kraken-koersen. Claude neemt elke beslissing zelf en schrijft bij elke ronde op waarom.</p>
     </div>
     <span class="pill" id="fresh"><i></i><span id="freshTxt">gegevens laden…</span></span>
   </header>
@@ -92,7 +92,7 @@ footer{color:var(--muted);font-size:12.5px}
   <section class="panel">
     <div class="score">
       <div><div class="k">Portefeuille</div><div class="v" id="sValue">—</div><div class="s" id="sPct">&nbsp;</div></div>
-      <div><div class="k" id="bLabel">Benchmark: BTC kopen en houden</div><div class="v" id="sBench">—</div><div class="s" id="sBenchPct">&nbsp;</div></div>
+      <div><div class="k" id="bLabel">Benchmark: ETH kopen en houden</div><div class="v" id="sBench">—</div><div class="s" id="sBenchPct">&nbsp;</div></div>
       <div><div class="k">Stand van de wedstrijd</div><p class="verdict" id="sVerdict" style="margin-top:6px">Nog geen gegevens.</p></div>
     </div>
   </section>
@@ -100,7 +100,7 @@ footer{color:var(--muted);font-size:12.5px}
   <section class="panel chart">
     <h2>Verloop per ronde</h2>
     <div id="chart"><p class="empty">De grafiek verschijnt zodra de eerste ronde gelogd is.</p></div>
-    <div class="legend"><span class="a">Claude</span><span class="b">BTC kopen en houden</span><em>stippellijn = startkapitaal €500</em></div>
+    <div class="legend"><span class="a">Claude</span><span class="b" id="lgB">ETH kopen en houden</span><em id="lgStart">stippellijn = startkapitaal €1000</em></div>
   </section>
 
   <div class="cols">
@@ -118,12 +118,12 @@ footer{color:var(--muted);font-size:12.5px}
       <section class="panel">
         <h2>Spelregels</h2>
         <ol class="rules">
-          <li>Start met €500 virtueel geld op 17 oktober 2026.</li>
+          <li>Start op 10 november 2026 met €1000 virtueel geld, volledig in ETH.</li>
           <li>Enkel spot: kopen en verkopen, geen hefboom en geen short.</li>
           <li>Prijzen zijn de echte bied- en laatkoersen van Kraken in euro.</li>
           <li>Elke trade kost 0,40% fee, zoals bij Kraken voor kleine volumes.</li>
-          <li>Claude kiest zelf uit BTC, ETH, SOL, XRP, ADA, DOGE, LINK, AVAX en DOT.</li>
-          <li>Te kloppen: €500 in BTC op dag één, gewoon laten staan.</li>
+          <li>Claude handelt alleen in ETH tegen euro. De andere munten mag hij bekijken, niet kopen.</li>
+          <li>Te kloppen: de ETH van dag één gewoon laten staan. Elke trade moet dus beter doen dan niets doen.</li>
         </ol>
       </section>
     </div>
@@ -133,7 +133,7 @@ footer{color:var(--muted);font-size:12.5px}
     </section>
   </div>
 
-  <footer id="foot">Geen echt geld, geen beleggingsadvies. Puur een experiment. Code en volledige historiek op <a href="https://github.com/pietervroman-del/claude-de-trader" style="color:var(--accent)">GitHub</a>.</footer>
+  <footer id="foot">Vorig spel (17 okt – 10 nov 2026, €500, vrije muntkeuze): Claude eindigde op €487,38, BTC kopen en houden op €458,21. <a href="https://github.com/pietervroman-del/claude-de-trader/tree/main/archive/2026-10-btc-500" style="color:var(--accent)">Archief</a>.<br>Geen echt geld, geen beleggingsadvies. Puur een experiment. Code en volledige historiek op <a href="https://github.com/pietervroman-del/claude-de-trader" style="color:var(--accent)">GitHub</a>.</footer>
 </div>
 
 <script>
@@ -149,7 +149,7 @@ const el=(id)=>document.getElementById(id);
 function esc(s){const d=document.createElement("div");d.textContent=s??"";return d.innerHTML}
 
 function render(s){
-  const start=s.start_eur||500;
+  const start=s.start_eur||1000;
   const vp=(s.value/start-1)*100, bp=(s.benchmark/start-1)*100;
   el("sValue").textContent=eur(s.value);
   el("sPct").innerHTML=`<span class="${cls(vp)}">${pct(vp)}</span> sinds start`;

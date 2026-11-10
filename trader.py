@@ -1,9 +1,10 @@
 """Claude de Trader - paper trading engine (virtueel geld, echte Kraken-koersen).
 
 Gebruik:
-  python trader.py status                       koersen, 24u/7d, SMA30, portefeuille
-  python trader.py buy  SOL 100 "reden"         koop voor EUR 100
-  python trader.py sell SOL all "reden"         verkoop alles (of een EUR-bedrag)
+  python trader.py init 1000 ETH                nieuw spel: start met EUR 1000 volledig in ETH
+  python trader.py status                       koersen, 24u/7d/30d, SMA's, RSI, portefeuille
+  python trader.py buy  ETH 100 "reden"         koop voor EUR 100
+  python trader.py sell ETH all "reden"         verkoop alles (of een EUR-bedrag)
   python trader.py round "analyse en plan"      log een ronde (ook zonder trade)
   python trader.py export                       schrijf docs/data.json voor het dashboard
   python trader.py snapshot                     schrijf data/market.json (draait in GitHub Actions)
@@ -19,6 +20,7 @@ STATE = ROOT / "data" / "state.json"
 PUBLIC = ROOT / "docs" / "data.json"
 MARKET = ROOT / "data" / "market.json"
 FEE = 0.004  # Kraken taker fee voor kleine volumes
+TRADABLE = ("ETH",)  # alleen hiermee mag gehandeld worden; de rest is enkel om de markt te lezen
 
 PAIRS = {
     "BTC": "XXBTZEUR", "ETH": "XETHZEUR", "SOL": "SOLEUR", "XRP": "XXRPZEUR", "ADA": "ADAEUR",
@@ -47,7 +49,12 @@ def live_weekly(pair):
     res = kraken(f"OHLC?pair={pair}&interval=1440")
     rows = next(v for k, v in res.items() if k != "last")
     closes = [float(r[4]) for r in rows]
-    return {"ch7": (closes[-1] / closes[-8] - 1) * 100, "sma30": sum(closes[-30:]) / 30}
+    gains = [max(b - a, 0) for a, b in zip(closes[-15:-1], closes[-14:])]
+    losses = [max(a - b, 0) for a, b in zip(closes[-15:-1], closes[-14:])]
+    rsi = 100 - 100 / (1 + sum(gains) / sum(losses)) if sum(losses) else 100.0
+    return {"ch7": (closes[-1] / closes[-8] - 1) * 100, "ch30": (closes[-1] / closes[-31] - 1) * 100,
+            "sma7": sum(closes[-7:]) / 7, "sma30": sum(closes[-30:]) / 30, "rsi14": rsi,
+            "high30": max(float(r[2]) for r in rows[-30:]), "low30": min(float(r[3]) for r in rows[-30:])}
 
 
 # Niet elke omgeving mag Kraken bereiken (de Claude-cloud niet). Dan gebruiken we
@@ -100,24 +107,35 @@ def value(s, tk):
     return s["cash"] + sum(q * tk[c]["bid"] for c, q in s["holdings"].items())
 
 
+def bench(s, tk):
+    return s["benchmark"]["qty"] * tk[s["benchmark"]["coin"]]["bid"]
+
+
 def cmd_status(s, tk):
     print(f"{'COIN':<5} {'PRIJS':>12} {'24u%':>8} {'7d%':>8} {'vs SMA30':>9}")
     for c, p in PAIRS.items():
         t, w = tk[c], weekly(p)
         print(f"{c:<5} {t['last']:>12,.4f} {(t['last']/t['open24']-1)*100:>8.2f} "
               f"{w['ch7']:>8.2f} {(t['last']/w['sma30']-1)*100:>8.1f}%")
+    for c in TRADABLE:
+        t, w = tk[c], weekly(PAIRS[c])
+        print(f"\n{c} in detail: laatst {t['last']:,.2f} (bied {t['bid']:,.2f} / laat {t['ask']:,.2f})")
+        print(f"  30d: {w['ch30']:+.1f}%, bereik {w['low30']:,.0f} - {w['high30']:,.0f}")
+        print(f"  SMA7 {w['sma7']:,.0f} ({(t['last']/w['sma7']-1)*100:+.1f}%), "
+              f"SMA30 {w['sma30']:,.0f} ({(t['last']/w['sma30']-1)*100:+.1f}%), RSI14 {w['rsi14']:.0f}")
     print(f"\nCash: EUR {s['cash']:.2f}")
     for c, q in s["holdings"].items():
         print(f"{c}: {q:.6f} = EUR {q * tk[c]['bid']:.2f}")
-    v, b = value(s, tk), s["benchmark"]["qty"] * tk["BTC"]["bid"]
-    print(f"Totaal: EUR {v:.2f} ({(v/s['start_eur']-1)*100:+.2f}%)  |  Benchmark BTC-hold: EUR {b:.2f}")
+    v, b = value(s, tk), bench(s, tk)
+    print(f"Totaal: EUR {v:.2f} ({(v/s['start_eur']-1)*100:+.2f}%)  |  "
+          f"Benchmark {s['benchmark']['coin']}-hold: EUR {b:.2f}")
     print(f"Rondes tot nu: {len(s['rounds'])}, trades: {len(s['trades'])}")
 
 
 def cmd_trade(s, tk, side, coin, amount, reason):
     coin = coin.upper()
-    if coin not in PAIRS:
-        raise SystemExit(f"Onbekende coin {coin}")
+    if coin not in TRADABLE:
+        raise SystemExit(f"Handelen mag alleen in {', '.join(TRADABLE)}")
     if not reason:
         raise SystemExit("Geef een reden op")
     t = tk[coin]
@@ -152,7 +170,7 @@ def cmd_round(s, tk, note):
     if not note:
         raise SystemExit("Geef een analyse op")
     r = {"id": f"r{stamp()[:12]}", "time": now(), "value": round(value(s, tk), 2),
-         "benchmark": round(s["benchmark"]["qty"] * tk["BTC"]["bid"], 2), "cash": round(s["cash"], 2),
+         "benchmark": round(bench(s, tk), 2), "cash": round(s["cash"], 2),
          "positions": {c: round(q * tk[c]["bid"], 2) for c, q in s["holdings"].items()}, "note": note}
     s["rounds"].append(r)
     save(s)
@@ -164,7 +182,8 @@ def cmd_export(s, tk):
     doc = {
         "start_eur": s["start_eur"], "started": s["started"], "updated": now(), "fee": FEE,
         "cash": round(s["cash"], 2), "value": round(v, 2),
-        "benchmark": round(s["benchmark"]["qty"] * tk["BTC"]["bid"], 2), "benchmark_coin": "BTC",
+        "benchmark": round(bench(s, tk), 2), "benchmark_coin": s["benchmark"]["coin"],
+        "tradable": list(TRADABLE),
         "positions": [{"coin": c, "qty": q, "price": tk[c]["bid"], "eur": round(q * tk[c]["bid"], 2)}
                       for c, q in s["holdings"].items()],
         "market": [{"coin": c, "price": tk[c]["last"], "ch24": round((tk[c]["last"]/tk[c]["open24"]-1)*100, 2)}
@@ -173,6 +192,23 @@ def cmd_export(s, tk):
     }
     PUBLIC.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"docs/data.json geschreven (waarde EUR {v:.2f})")
+
+
+def cmd_init(eur, coin):
+    if STATE.exists():
+        raise SystemExit("data/state.json bestaat al; archiveer het oude spel eerst")
+    coin, eur = coin.upper(), float(eur)
+    price = tickers()[coin]["last"]
+    qty = eur / price  # startpositie zonder fee: het spel begint al volledig in deze munt
+    s = {"start_eur": eur, "started": now(), "cash": 0.0, "holdings": {coin: qty},
+         "benchmark": {"coin": coin, "qty": qty, "price": price},
+         "trades": [{"id": f"t{stamp()}{coin}", "time": now(), "side": "buy", "coin": coin, "qty": qty,
+                     "price": price, "eur": eur, "fee": 0,
+                     "reason": f"Startpositie volgens de spelregels: EUR {eur:.0f} volledig in {coin}."}],
+         "rounds": []}
+    STATE.parent.mkdir(exist_ok=True)
+    save(s)
+    print(f"Nieuw spel: EUR {eur:.0f} in {coin} = {qty:.6f} {coin} aan {price:,.2f}")
 
 
 def cmd_snapshot():
@@ -185,6 +221,8 @@ def main(argv):
     cmd = argv[1] if len(argv) > 1 else "status"
     if cmd == "snapshot":
         return cmd_snapshot()
+    if cmd == "init":
+        return cmd_init(argv[2], argv[3])
     s, tk = load(), tickers()
     if cmd == "status":
         cmd_status(s, tk)
