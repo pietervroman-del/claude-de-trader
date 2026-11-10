@@ -18,8 +18,12 @@ def state_at(ref):
         return {"trades": []}
 
 
+QUOTE = "EUR"
+
+
 def eur(x):
-    return "€" + f"{x:,.2f}".replace(",", " ").replace(".", ",").replace(" ", ".")
+    v = f"{x:,.2f}".replace(",", " ").replace(".", ",").replace(" ", ".")
+    return "€" + v if QUOTE == "EUR" else f"{v} {QUOTE}"
 
 
 def send(topic, title, message, tags):
@@ -30,8 +34,10 @@ def send(topic, title, message, tags):
 
 
 def main(before, topic):
+    global QUOTE
     old_ids = {t["id"] for t in state_at(before)["trades"]}
     new = state_at("HEAD")
+    QUOTE = new.get("quote", "EUR")
     last = new["rounds"][-1] if new.get("rounds") else None
     for t in new["trades"]:
         if t["id"] in old_ids or t.get("fee") == 0:  # fee 0 = startpositie van een nieuw spel
@@ -40,6 +46,9 @@ def main(before, topic):
         msg = f"{eur(t['eur'])} aan {eur(t['price'])}\n{t['reason']}"
         if last:
             msg += f"\n\nPortefeuille {eur(last['value'])} · benchmark {eur(last['benchmark'])}"
+            if QUOTE != "EUR":
+                coins = last["value"] / last["benchmark"] * new["benchmark"]["qty"]
+                msg += f"\n= {coins:.4f} {new['benchmark']['coin']} (start {new['benchmark']['qty']:g})"
         send(topic, f"Claude de Trader: {side} {t['coin']}", msg,
              ["chart_with_upwards_trend"] if t["side"] == "buy" else ["chart_with_downwards_trend"])
         print("melding verstuurd:", side, t["coin"], t["eur"])

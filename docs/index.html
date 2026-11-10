@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="Claude handelt zelfstandig in ETH met een virtuele €1000 op echte Kraken-koersen, tegen ETH kopen en houden.">
+<meta name="description" content="Claude handelt zelfstandig in ETH/USDC met virtueel 2 ETH op echte Kraken-koersen, tegen gewoon 2 ETH houden.">
 <title>Claude de Trader</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -84,7 +84,7 @@ footer{color:var(--muted);font-size:12.5px}
   <header>
     <div>
       <h1>Claude de Trader</h1>
-      <p>Papertrading-experiment met een virtuele €1000, alleen in ETH, op echte Kraken-koersen. Claude neemt elke beslissing zelf en schrijft bij elke ronde op waarom.</p>
+      <p>Papertrading-experiment met virtueel 2 ETH, verhandeld tegen USDC op echte Kraken-koersen. Claude neemt elke beslissing zelf en schrijft bij elke ronde op waarom.</p>
     </div>
     <span class="pill" id="fresh"><i></i><span id="freshTxt">gegevens laden…</span></span>
   </header>
@@ -92,7 +92,7 @@ footer{color:var(--muted);font-size:12.5px}
   <section class="panel">
     <div class="score">
       <div><div class="k">Portefeuille</div><div class="v" id="sValue">—</div><div class="s" id="sPct">&nbsp;</div></div>
-      <div><div class="k" id="bLabel">Benchmark: ETH kopen en houden</div><div class="v" id="sBench">—</div><div class="s" id="sBenchPct">&nbsp;</div></div>
+      <div><div class="k" id="bLabel">Benchmark: 2 ETH houden</div><div class="v" id="sBench">—</div><div class="s" id="sBenchPct">&nbsp;</div></div>
       <div><div class="k">Stand van de wedstrijd</div><p class="verdict" id="sVerdict" style="margin-top:6px">Nog geen gegevens.</p></div>
     </div>
   </section>
@@ -118,12 +118,12 @@ footer{color:var(--muted);font-size:12.5px}
       <section class="panel">
         <h2>Spelregels</h2>
         <ol class="rules">
-          <li>Start op 10 november 2026 met €1000 virtueel geld, volledig in ETH.</li>
+          <li>Startkapitaal: 2 ETH op 10 november 2026. De 60/40-verdeling uit het vorige spel liep mee: 1,2 ETH en de rest in USDC.</li>
           <li>Enkel spot: kopen en verkopen, geen hefboom en geen short.</li>
-          <li>Prijzen zijn de echte bied- en laatkoersen van Kraken in euro.</li>
+          <li>Prijzen zijn de echte bied- en laatkoersen van het Kraken-paar ETH/USDC.</li>
           <li>Elke trade kost 0,40% fee, zoals bij Kraken voor kleine volumes.</li>
-          <li>Claude handelt alleen in ETH tegen euro. De andere munten mag hij bekijken, niet kopen.</li>
-          <li>Te kloppen: de ETH van dag één gewoon laten staan. Elke trade moet dus beter doen dan niets doen.</li>
+          <li>Claude handelt alleen ETH tegen USDC. De andere munten mag hij bekijken, niet kopen.</li>
+          <li>Te kloppen: gewoon 2 ETH houden. Claude wint als zijn portefeuille meer dan 2 ETH waard is.</li>
         </ol>
       </section>
     </div>
@@ -133,12 +133,11 @@ footer{color:var(--muted);font-size:12.5px}
     </section>
   </div>
 
-  <footer id="foot">Vorig spel (17 okt – 10 nov 2026, €500, vrije muntkeuze): Claude eindigde op €487,38, BTC kopen en houden op €458,21. <a href="https://github.com/pietervroman-del/claude-de-trader/tree/main/archive/2026-10-btc-500" style="color:var(--accent)">Archief</a>.<br>Geen echt geld, geen beleggingsadvies. Puur een experiment. Code en volledige historiek op <a href="https://github.com/pietervroman-del/claude-de-trader" style="color:var(--accent)">GitHub</a>.</footer>
+  <footer id="foot">Kort ETH-spel in euro (10 nov 2026, €1000, 2 rondes): <a href="https://github.com/pietervroman-del/claude-de-trader/tree/main/archive/2026-11-eth-1000eur" style="color:var(--accent)">archief</a>.<br>Eerste spel (17 okt – 10 nov 2026, €500, vrije muntkeuze): Claude eindigde op €487,38, BTC kopen en houden op €458,21: <a href="https://github.com/pietervroman-del/claude-de-trader/tree/main/archive/2026-10-btc-500" style="color:var(--accent)">archief</a>.<br>Geen echt geld, geen beleggingsadvies. Puur een experiment. Code en volledige historiek op <a href="https://github.com/pietervroman-del/claude-de-trader" style="color:var(--accent)">GitHub</a>.</footer>
 </div>
 
 <script>
 const COLORS={BTC:"#e8912d",ETH:"#6274e0",SOL:"#9b5de5",XRP:"#3a8fb7",ADA:"#2f6fd6",DOGE:"#c9a227",LINK:"#2a5ada",AVAX:"#d64545",DOT:"#d63c8a",CASH:"var(--line)"};
-const eur=n=>"€"+Number(n).toLocaleString("nl-BE",{minimumFractionDigits:2,maximumFractionDigits:2});
 const pct=n=>(n>=0?"+":"")+n.toLocaleString("nl-BE",{minimumFractionDigits:2,maximumFractionDigits:2})+"%";
 const cls=n=>n>=0?"up":"down";
 const dt=s=>new Date(s);
@@ -148,17 +147,38 @@ const qtyFmt=q=>q>=1?q.toLocaleString("nl-BE",{maximumFractionDigits:2}):q.toPre
 const el=(id)=>document.getElementById(id);
 function esc(s){const d=document.createElement("div");d.textContent=s??"";return d.innerHTML}
 
+// bedragen in de munteenheid van het spel (EUR in oude spellen, USDC nu)
+let QUOTE="EUR";
+function eur(n){
+  const v=Number(n).toLocaleString("nl-BE",{minimumFractionDigits:2,maximumFractionDigits:2});
+  return QUOTE==="EUR"?"€"+v:v+" "+QUOTE;
+}
+const eth=n=>Number(n).toLocaleString("nl-BE",{minimumFractionDigits:4,maximumFractionDigits:4})+" ETH";
+// waarde uitgedrukt in de benchmarkmunt: benchmark = start_qty × koers, dus value/benchmark × start_qty
+const inCoin=(v,b,q)=>v/b*q;
+
 function render(s){
+  QUOTE=s.quote||"EUR";
+  const q=s.start_qty||0, coin=s.benchmark_coin||"ETH";
   const start=s.start_eur||1000;
-  const vp=(s.value/start-1)*100, bp=(s.benchmark/start-1)*100;
+  const bp=(s.benchmark/start-1)*100;
   el("sValue").textContent=eur(s.value);
-  el("sPct").innerHTML=`<span class="${cls(vp)}">${pct(vp)}</span> sinds start`;
   el("sBench").textContent=eur(s.benchmark);
-  el("sBenchPct").innerHTML=`<span class="${cls(bp)}">${pct(bp)}</span> sinds start`;
-  const diff=s.value-s.benchmark;
+  el("bLabel").textContent=`Benchmark: ${q.toLocaleString("nl-BE")} ${coin} houden`;
+  if(QUOTE==="EUR"){
+    const vp=(s.value/start-1)*100;
+    el("sPct").innerHTML=`<span class="${cls(vp)}">${pct(vp)}</span> sinds start`;
+    el("sBenchPct").innerHTML=`<span class="${cls(bp)}">${pct(bp)}</span> sinds start`;
+  }else{
+    const ve=inCoin(s.value,s.benchmark,q);
+    el("sPct").innerHTML=`= <span class="${cls(ve-q)}">${eth(ve)}</span>`;
+    el("sBenchPct").innerHTML=`${coin}-koers <span class="${cls(bp)}">${pct(bp)}</span> sinds start`;
+  }
+  const diff=s.value-s.benchmark, dEth=inCoin(s.value,s.benchmark,q)-q;
+  const extra=QUOTE==="EUR"?"":` (${dEth>0?"+":"−"}${eth(Math.abs(dEth))})`;
   el("sVerdict").innerHTML=Math.abs(diff)<0.5?"Gelijkspel met de benchmark.":
-    diff>0?`Claude staat <span class="up">${eur(diff)}</span> voor op kopen en houden.`:
-           `Claude staat <span class="down">${eur(-diff)}</span> achter op kopen en houden.`;
+    diff>0?`Claude staat <span class="up">${eur(diff)}${extra}</span> voor op gewoon houden.`:
+           `Claude staat <span class="down">${eur(-diff)}${extra}</span> achter op gewoon houden.`;
 
   const upd=dt(s.updated), age=(Date.now()-upd)/36e5;
   el("fresh").classList.toggle("stale",age>8);
@@ -167,7 +187,7 @@ function render(s){
   // posities
   const parts=[...(s.positions||[]).map(p=>({coin:p.coin,qty:p.qty,eur:p.eur})),{coin:"CASH",qty:null,eur:s.cash}];
   el("alloc").innerHTML=parts.filter(p=>p.eur>0).map(p=>`<b title="${p.coin}" style="width:${p.eur/s.value*100}%;background:${COLORS[p.coin]||"var(--accent)"}"></b>`).join("");
-  el("pos").innerHTML=parts.map(p=>`<tr><td><span class="dot" style="background:${COLORS[p.coin]||"var(--accent)"}"></span>${p.coin==="CASH"?"Cash (EUR)":p.coin}</td>
+  el("pos").innerHTML=parts.map(p=>`<tr><td><span class="dot" style="background:${COLORS[p.coin]||"var(--accent)"}"></span>${p.coin==="CASH"?`Cash (${QUOTE})`:p.coin}</td>
     <td class="r num">${p.qty==null?"—":qtyFmt(p.qty)}</td><td class="r num">${eur(p.eur)}</td><td class="r num">${(p.eur/s.value*100).toFixed(0)}%</td></tr>`).join("");
 
   // markt
@@ -191,19 +211,27 @@ function render(s){
 }
 
 function drawChart(s){
-  const pts=[{t:s.started,v:s.start_eur,b:s.start_eur},...(s.rounds||[]).map(r=>({t:r.time,v:r.value,b:r.benchmark}))];
-  if(s.updated>(pts.at(-1)?.t||"")) pts.push({t:s.updated,v:s.value,b:s.benchmark});
+  // In een spel in USDC tekenen we alles in ETH: de benchmark is dan een vlakke lijn op het startaantal.
+  const asCoin=s.quote&&s.quote!=="EUR", q=s.start_qty;
+  const conv=(v,b)=>asCoin?inCoin(v,b,q):v;
+  const base=asCoin?q:s.start_eur;
+  const pts=[{t:s.started,v:base,b:base},...(s.rounds||[]).map(r=>({t:r.time,v:conv(r.value,r.benchmark),b:conv(r.benchmark,r.benchmark)}))];
+  if(s.updated>(pts.at(-1)?.t||"")) pts.push({t:s.updated,v:conv(s.value,s.benchmark),b:conv(s.benchmark,s.benchmark)});
+  el("lgB").textContent=asCoin?`${q.toLocaleString("nl-BE")} ETH houden`:"ETH kopen en houden";
+  el("lgStart").textContent=asCoin?"Claude uitgedrukt in ETH; boven de lijn = beter dan houden":`stippellijn = startkapitaal ${eur(base)}`;
   if(pts.length<2){return}
-  const W=1000,H=300,L=58,R=14,T=14,B=30;
+  const W=1000,H=300,L=asCoin?70:58,R=14,T=14,B=30;
   const t0=+dt(pts[0].t), t1=Math.max(+dt(pts.at(-1).t),t0+36e5);
-  let lo=Math.min(...pts.flatMap(p=>[p.v,p.b]),s.start_eur), hi=Math.max(...pts.flatMap(p=>[p.v,p.b]),s.start_eur);
-  const pad=Math.max((hi-lo)*0.15,2.5); lo-=pad; hi+=pad;
-  const step=[1,2,5,10,20,25,50,100].find(x=>(hi-lo)/x<=6)||100;
+  let lo=Math.min(...pts.flatMap(p=>[p.v,p.b]),base), hi=Math.max(...pts.flatMap(p=>[p.v,p.b]),base);
+  const pad=Math.max((hi-lo)*0.15,asCoin?0.005:2.5); lo-=pad; hi+=pad;
+  const steps=asCoin?[0.001,0.002,0.005,0.01,0.02,0.05,0.1,0.2,0.5]:[1,2,5,10,20,25,50,100];
+  const step=steps.find(x=>(hi-lo)/x<=6)||steps.at(-1);
+  const tick=v=>asCoin?v.toLocaleString("nl-BE",{maximumFractionDigits:3})+" Ξ":"€"+v;
   const x=t=>L+(+dt(t)-t0)/(t1-t0)*(W-L-R), y=v=>T+(hi-v)/(hi-lo)*(H-T-B);
   let g="";
-  for(let v=Math.ceil(lo/step)*step; v<=hi; v+=step){
+  for(let i=Math.ceil(lo/step); i*step<=hi; i++){const v=i*step;
     g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/>`+
-       `<text x="${L-8}" y="${y(v)+4}" text-anchor="end" font-size="12" fill="var(--muted)" font-family="var(--mono)">€${v}</text>`;
+       `<text x="${L-8}" y="${y(v)+4}" text-anchor="end" font-size="12" fill="var(--muted)" font-family="var(--mono)">${tick(v)}</text>`;
   }
   const days=Math.max(1,Math.round((t1-t0)/864e5)); const n=Math.min(6,days+1);
   for(let i=0;i<n;i++){const tt=t0+(t1-t0)*i/Math.max(1,n-1);
@@ -213,7 +241,7 @@ function drawChart(s){
   const last=pts.at(-1);
   el("chart").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Waarde van Claude tegenover de benchmark">
     ${g}
-    <line x1="${L}" x2="${W-R}" y1="${y(s.start_eur)}" y2="${y(s.start_eur)}" stroke="var(--muted)" stroke-dasharray="4 5" stroke-width="1.2"/>
+    <line x1="${L}" x2="${W-R}" y1="${y(base)}" y2="${y(base)}" stroke="var(--muted)" stroke-dasharray="4 5" stroke-width="1.2"/>
     <path d="${area}" fill="var(--accent)" fill-opacity=".09"/>
     <path d="${line("b")}" fill="none" stroke="var(--bench)" stroke-width="2"/>
     <path d="${line("v")}" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linejoin="round"/>

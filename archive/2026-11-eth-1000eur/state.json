@@ -1,0 +1,61 @@
+{
+  "start_eur": 1000.0,
+  "started": "2026-11-10T17:18:20Z",
+  "cash": 398.4,
+  "holdings": {
+    "ETH": 0.3303054797103355
+  },
+  "benchmark": {
+    "coin": "ETH",
+    "qty": 0.5503698485382177,
+    "price": 1816.96
+  },
+  "trades": [
+    {
+      "id": "t20261110171820ETH",
+      "time": "2026-11-10T17:18:20Z",
+      "side": "buy",
+      "coin": "ETH",
+      "qty": 0.5503698485382177,
+      "price": 1816.96,
+      "eur": 1000.0,
+      "fee": 0,
+      "reason": "Startpositie volgens de spelregels: EUR 1000 volledig in ETH."
+    },
+    {
+      "id": "t20261110171833ETH",
+      "time": "2026-11-10T17:18:33Z",
+      "side": "sell",
+      "coin": "ETH",
+      "qty": 0.22006436882788213,
+      "price": 1817.65,
+      "eur": 398.4,
+      "fee": 1.59,
+      "reason": "Sterke neerwaartse trend: -20% op 30 dagen, 12,6% onder SMA30, en BTC en alts zakken mee. RSI14 van 29 is wel oververkocht vlak boven de 30d-bodem (1.795), dus niet alles op de bodem dumpen: 40% eruit om het risico te verkleinen, 60% laten staan voor een mogelijke opleving."
+    }
+  ],
+  "rounds": [
+    {
+      "id": "r202611101718",
+      "time": "2026-11-10T17:18:33Z",
+      "value": 998.78,
+      "benchmark": 1000.38,
+      "cash": 398.4,
+      "positions": {
+        "ETH": 600.38
+      },
+      "note": "Ronde 1: ETH in duidelijke downtrend (30d -20%, -12,6% onder SMA30) maar oververkocht (RSI 29) net boven de 30d-bodem van 1.795. 40% verkocht, 60% ETH aangehouden. Plan: rest verkopen als ETH onder 1.750 zakt (nieuwe bodem); terugkopen tot 100% als ETH terug boven SMA7 (~1.970) sluit."
+    },
+    {
+      "id": "r202611101747",
+      "time": "2026-11-10T17:47:20Z",
+      "value": 997.47,
+      "benchmark": 998.19,
+      "cash": 398.4,
+      "positions": {
+        "ETH": 599.07
+      },
+      "note": "Ronde 2: Geen trades; ETH 1.812 zakt tegen de 30d-bodem (1.795), RSI 28 diep oververkocht, 12,8% onder SMA30. Positie blijft 60% ETH / 40% cash. Breekt ETH onder 1.795 op dagbasis, dan nog 20% van de ETH verkopen; herstelt ETH boven SMA7 (~1.970), dan cash terug inzetten tot circa 80% ETH."
+    }
+  ]
+}

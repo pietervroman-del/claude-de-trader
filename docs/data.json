@@ -1,11 +1,14 @@
 {
- "start_eur": 1000.0,
- "started": "2026-11-10T17:18:20Z",
- "updated": "2026-11-10T17:47:20Z",
+ "start_eur": 4050.12,
+ "started": "2026-11-10T17:53:26Z",
+ "updated": "2026-11-10T17:53:34Z",
  "fee": 0.004,
- "cash": 398.4,
- "value": 997.47,
- "benchmark": 998.19,
+ "quote": "USDC",
+ "start_qty": 2.0,
+ "value_in_coin": 2.000118,
+ "cash": 1620.54,
+ "value": 4050.98,
+ "benchmark": 4050.74,
  "benchmark_coin": "ETH",
  "tradable": [
   "ETH"
@@ -13,104 +16,93 @@
  "positions": [
   {
    "coin": "ETH",
-   "qty": 0.3303054797103355,
-   "price": 1813.68,
-   "eur": 599.07
+   "qty": 1.2,
+   "price": 2025.37,
+   "eur": 2430.44
   }
  ],
  "market": [
   {
    "coin": "BTC",
-   "price": 65456.3,
-   "ch24": -2.41
+   "price": 73064.1,
+   "ch24": -2.91
   },
   {
    "coin": "ETH",
-   "price": 1811.62,
-   "ch24": -4.68
+   "price": 2025.06,
+   "ch24": -5.02
   },
   {
    "coin": "SOL",
-   "price": 73.61,
-   "ch24": -4.61
+   "price": 82.29,
+   "ch24": -5.0
   },
   {
    "coin": "XRP",
-   "price": 0.9442,
-   "ch24": -3.6
+   "price": 1.05318,
+   "ch24": -4.04
   },
   {
    "coin": "ADA",
-   "price": 0.154045,
-   "ch24": -2.57
+   "price": 0.172071,
+   "ch24": -2.93
   },
   {
    "coin": "DOGE",
-   "price": 0.0599604,
-   "ch24": -3.81
+   "price": 0.0670758,
+   "ch24": -4.13
   },
   {
    "coin": "LINK",
-   "price": 9.1447,
-   "ch24": -3.64
+   "price": 10.224,
+   "ch24": -4.03
   },
   {
    "coin": "AVAX",
-   "price": 7.372,
-   "ch24": -4.23
+   "price": 8.227,
+   "ch24": -4.79
   },
   {
    "coin": "DOT",
-   "price": 0.7506,
-   "ch24": -1.55
+   "price": 0.8386,
+   "ch24": -1.95
   }
  ],
  "trades": [
   {
-   "id": "t20261110171820ETH",
-   "time": "2026-11-10T17:18:20Z",
+   "id": "t20261110175326ETH0",
+   "time": "2026-11-10T17:53:26Z",
    "side": "buy",
    "coin": "ETH",
-   "qty": 0.5503698485382177,
-   "price": 1816.96,
-   "eur": 1000.0,
+   "qty": 2.0,
+   "price": 2025.06,
+   "eur": 4050.12,
    "fee": 0,
-   "reason": "Startpositie volgens de spelregels: EUR 1000 volledig in ETH."
+   "reason": "Startkapitaal volgens de spelregels: 2 ETH."
   },
   {
-   "id": "t20261110171833ETH",
-   "time": "2026-11-10T17:18:33Z",
+   "id": "t20261110175326ETH1",
+   "time": "2026-11-10T17:53:26Z",
    "side": "sell",
    "coin": "ETH",
-   "qty": 0.22006436882788213,
-   "price": 1817.65,
-   "eur": 398.4,
-   "fee": 1.59,
-   "reason": "Sterke neerwaartse trend: -20% op 30 dagen, 12,6% onder SMA30, en BTC en alts zakken mee. RSI14 van 29 is wel oververkocht vlak boven de 30d-bodem (1.795), dus niet alles op de bodem dumpen: 40% eruit om het risico te verkleinen, 60% laten staan voor een mogelijke opleving."
+   "qty": 0.8,
+   "price": 2025.67,
+   "eur": 1620.54,
+   "fee": 0,
+   "reason": "Overgenomen positie: 40% stond al in cash en staat nu in USDC."
   }
  ],
  "rounds": [
   {
-   "id": "r202611101718",
-   "time": "2026-11-10T17:18:33Z",
-   "value": 998.78,
-   "benchmark": 1000.38,
-   "cash": 398.4,
+   "id": "r202611101753",
+   "time": "2026-11-10T17:53:33Z",
+   "value": 4050.98,
+   "benchmark": 4050.74,
+   "cash": 1620.54,
    "positions": {
-    "ETH": 600.38
+    "ETH": 2430.44
    },
-   "note": "Ronde 1: ETH in duidelijke downtrend (30d -20%, -12,6% onder SMA30) maar oververkocht (RSI 29) net boven de 30d-bodem van 1.795. 40% verkocht, 60% ETH aangehouden. Plan: rest verkopen als ETH onder 1.750 zakt (nieuwe bodem); terugkopen tot 100% als ETH terug boven SMA7 (~1.970) sluit."
-  },
-  {
-   "id": "r202611101747",
-   "time": "2026-11-10T17:47:20Z",
-   "value": 997.47,
-   "benchmark": 998.19,
-   "cash": 398.4,
-   "positions": {
-    "ETH": 599.07
-   },
-   "note": "Ronde 2: Geen trades; ETH 1.812 zakt tegen de 30d-bodem (1.795), RSI 28 diep oververkocht, 12,8% onder SMA30. Positie blijft 60% ETH / 40% cash. Breekt ETH onder 1.795 op dagbasis, dan nog 20% van de ETH verkopen; herstelt ETH boven SMA7 (~1.970), dan cash terug inzetten tot circa 80% ETH."
+   "note": "Ronde 1: overgang naar ETH/USDC met 2 ETH als startkapitaal; de 60/40-verdeling uit het vorige spel blijft (1,2 ETH + 1.620 USDC). ETH (2.025) staat net boven de 30d-bodem van 2.002 en 12,9% onder SMA30, RSI 29 is oververkocht. Plan ongewijzigd: sluit ETH op dagbasis onder 2.000, dan nog een vijfde van de ETH naar USDC; herstelt ETH boven SMA7 (~2.200), dan USDC terug inzetten tot ongeveer 80% ETH. Doel: meer dan 2 ETH waard zijn."
   }
  ]
 }

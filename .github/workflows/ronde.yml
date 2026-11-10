@@ -1,9 +1,14 @@
 name: Handelsronde
 
-# Speelt drie keer per dag een papertrading-ronde met Claude, pusht het resultaat en meldt trades via ntfy.
+# Speelt om 07:30, 12:00, 18:00 en 23:00 Belgische tijd een papertrading-ronde met Claude,
+# pusht het resultaat en meldt trades via ntfy.
+# Cron loopt in UTC, dus staan zowel de winter- als de zomertijden erin; de job "uur" laat er telkens maar één door.
 on:
   schedule:
-    - cron: "20 7,13,19 * * *"
+    - cron: "30 6 * * *"         # winter (UTC+1): 07:30
+    - cron: "0 11,17,22 * * *"   # winter (UTC+1): 12:00, 18:00, 23:00
+    - cron: "30 5 * * *"         # zomer (UTC+2): 07:30
+    - cron: "0 10,16,21 * * *"   # zomer (UTC+2): 12:00, 18:00, 23:00
   workflow_dispatch:
 
 permissions:
@@ -14,7 +19,28 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  uur:
+    runs-on: ubuntu-latest
+    outputs:
+      spelen: ${{ steps.check.outputs.spelen }}
+    steps:
+      - id: check
+        env:
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          OFFSET=$(TZ=Europe/Brussels date +%z)
+          case "$SCHEDULE" in
+            "") SPELEN=true ;;                                   # handmatig gestart
+            "30 6 * * *"|"0 11,17,22 * * *") [ "$OFFSET" = "+0100" ] && SPELEN=true || SPELEN=false ;;
+            "30 5 * * *"|"0 10,16,21 * * *") [ "$OFFSET" = "+0200" ] && SPELEN=true || SPELEN=false ;;
+            *) SPELEN=false ;;
+          esac
+          echo "schema '$SCHEDULE', Brussel $OFFSET -> spelen=$SPELEN"
+          echo "spelen=$SPELEN" >> "$GITHUB_OUTPUT"
+
   ronde:
+    needs: uur
+    if: needs.uur.outputs.spelen == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:

@@ -1,10 +1,10 @@
 """Claude de Trader - paper trading engine (virtueel geld, echte Kraken-koersen).
 
 Gebruik:
-  python trader.py init 1000 ETH                nieuw spel: start met EUR 1000 volledig in ETH
+  python trader.py init 2 0.6                   nieuw spel: start met 2 ETH, waarvan 60% als ETH en 40% in USDC
   python trader.py status                       koersen, 24u/7d/30d, SMA's, RSI, portefeuille
-  python trader.py buy  ETH 100 "reden"         koop voor EUR 100
-  python trader.py sell ETH all "reden"         verkoop alles (of een EUR-bedrag)
+  python trader.py buy  ETH 200 "reden"         koop ETH voor 200 USDC
+  python trader.py sell ETH all "reden"         verkoop alle ETH (of een USDC-bedrag)
   python trader.py round "analyse en plan"      log een ronde (ook zonder trade)
   python trader.py export                       schrijf docs/data.json voor het dashboard
   python trader.py snapshot                     schrijf data/market.json (draait in GitHub Actions)
@@ -20,11 +20,14 @@ STATE = ROOT / "data" / "state.json"
 PUBLIC = ROOT / "docs" / "data.json"
 MARKET = ROOT / "data" / "market.json"
 FEE = 0.004  # Kraken taker fee voor kleine volumes
+QUOTE = "USDC"
 TRADABLE = ("ETH",)  # alleen hiermee mag gehandeld worden; de rest is enkel om de markt te lezen
+TRADE_PAIRS = {"ETH": "ETHUSDC"}  # het paar waarop effectief "gehandeld" wordt
 
+# marktoverzicht in USD (praktisch gelijk aan USDC); de indicatoren komen van deze liquide paren
 PAIRS = {
-    "BTC": "XXBTZEUR", "ETH": "XETHZEUR", "SOL": "SOLEUR", "XRP": "XXRPZEUR", "ADA": "ADAEUR",
-    "DOGE": "XDGEUR", "LINK": "LINKEUR", "AVAX": "AVAXEUR", "DOT": "DOTEUR",
+    "BTC": "XXBTZUSD", "ETH": "XETHZUSD", "SOL": "SOLUSD", "XRP": "XXRPZUSD", "ADA": "ADAUSD",
+    "DOGE": "XDGUSD", "LINK": "LINKUSD", "AVAX": "AVAXUSD", "DOT": "DOTUSD",
 }
 
 
@@ -39,10 +42,11 @@ def kraken(path):
 
 
 def live_tickers():
-    res = kraken("Ticker?pair=" + ",".join(PAIRS.values()))
+    pairs = {**PAIRS, **TRADE_PAIRS}  # het handelspaar vervangt de USD-koers van die munt
+    res = kraken("Ticker?pair=" + ",".join(list(PAIRS.values()) + list(TRADE_PAIRS.values())))
     return {c: {"ask": float(res[p]["a"][0]), "bid": float(res[p]["b"][0]),
                 "last": float(res[p]["c"][0]), "open24": float(res[p]["o"])}
-            for c, p in PAIRS.items()}
+            for c, p in pairs.items()}
 
 
 def live_weekly(pair):
@@ -111,6 +115,10 @@ def bench(s, tk):
     return s["benchmark"]["qty"] * tk[s["benchmark"]["coin"]]["bid"]
 
 
+def start_value(s):
+    return s.get("start_value", s.get("start_eur"))
+
+
 def cmd_status(s, tk):
     print(f"{'COIN':<5} {'PRIJS':>12} {'24u%':>8} {'7d%':>8} {'vs SMA30':>9}")
     for c, p in PAIRS.items():
@@ -123,12 +131,13 @@ def cmd_status(s, tk):
         print(f"  30d: {w['ch30']:+.1f}%, bereik {w['low30']:,.0f} - {w['high30']:,.0f}")
         print(f"  SMA7 {w['sma7']:,.0f} ({(t['last']/w['sma7']-1)*100:+.1f}%), "
               f"SMA30 {w['sma30']:,.0f} ({(t['last']/w['sma30']-1)*100:+.1f}%), RSI14 {w['rsi14']:.0f}")
-    print(f"\nCash: EUR {s['cash']:.2f}")
+    print(f"\nCash: {s['cash']:.2f} {QUOTE}")
     for c, q in s["holdings"].items():
-        print(f"{c}: {q:.6f} = EUR {q * tk[c]['bid']:.2f}")
+        print(f"{c}: {q:.6f} = {q * tk[c]['bid']:.2f} {QUOTE}")
     v, b = value(s, tk), bench(s, tk)
-    print(f"Totaal: EUR {v:.2f} ({(v/s['start_eur']-1)*100:+.2f}%)  |  "
-          f"Benchmark {s['benchmark']['coin']}-hold: EUR {b:.2f}")
+    bc = s["benchmark"]["coin"]
+    print(f"Totaal: {v:.2f} {QUOTE} = {v / tk[bc]['bid']:.4f} {bc}  |  "
+          f"Benchmark {s['benchmark']['qty']:g} {bc} houden: {b:.2f} {QUOTE}")
     print(f"Rondes tot nu: {len(s['rounds'])}, trades: {len(s['trades'])}")
 
 
@@ -142,7 +151,7 @@ def cmd_trade(s, tk, side, coin, amount, reason):
     if side == "buy":
         eur = float(amount)
         if eur > s["cash"] + 0.001:
-            raise SystemExit(f"Niet genoeg cash ({s['cash']:.2f})")
+            raise SystemExit(f"Niet genoeg {QUOTE} ({s['cash']:.2f})")
         qty, price = eur * (1 - FEE) / t["ask"], t["ask"]
         s["cash"] -= eur
         s["holdings"][coin] = s["holdings"].get(coin, 0.0) + qty
@@ -179,8 +188,11 @@ def cmd_round(s, tk, note):
 
 def cmd_export(s, tk):
     v = value(s, tk)
+    bc = s["benchmark"]["coin"]
     doc = {
-        "start_eur": s["start_eur"], "started": s["started"], "updated": now(), "fee": FEE,
+        "start_eur": start_value(s), "started": s["started"], "updated": now(), "fee": FEE,
+        "quote": s.get("quote", "EUR"), "start_qty": s["benchmark"]["qty"],
+        "value_in_coin": round(v / tk[bc]["bid"], 6),
         "cash": round(s["cash"], 2), "value": round(v, 2),
         "benchmark": round(bench(s, tk), 2), "benchmark_coin": s["benchmark"]["coin"],
         "tradable": list(TRADABLE),
@@ -191,24 +203,32 @@ def cmd_export(s, tk):
         "trades": s["trades"], "rounds": s["rounds"],
     }
     PUBLIC.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"docs/data.json geschreven (waarde EUR {v:.2f})")
+    print(f"docs/data.json geschreven (waarde {v:.2f} {QUOTE})")
 
 
-def cmd_init(eur, coin):
+def cmd_init(qty, keep):
+    """Nieuw spel met `qty` ETH, waarvan fractie `keep` als ETH blijft en de rest zonder fee in USDC staat."""
     if STATE.exists():
         raise SystemExit("data/state.json bestaat al; archiveer het oude spel eerst")
-    coin, eur = coin.upper(), float(eur)
-    price = tickers()[coin]["last"]
-    qty = eur / price  # startpositie zonder fee: het spel begint al volledig in deze munt
-    s = {"start_eur": eur, "started": now(), "cash": 0.0, "holdings": {coin: qty},
-         "benchmark": {"coin": coin, "qty": qty, "price": price},
-         "trades": [{"id": f"t{stamp()}{coin}", "time": now(), "side": "buy", "coin": coin, "qty": qty,
-                     "price": price, "eur": eur, "fee": 0,
-                     "reason": f"Startpositie volgens de spelregels: EUR {eur:.0f} volledig in {coin}."}],
-         "rounds": []}
+    coin, qty, keep = TRADABLE[0], float(qty), float(keep)
+    t = tickers()[coin]
+    price = t["last"]
+    trades = [{"id": f"t{stamp()}{coin}0", "time": now(), "side": "buy", "coin": coin, "qty": qty,
+               "price": price, "eur": round(qty * price, 2), "fee": 0,
+               "reason": f"Startkapitaal volgens de spelregels: {qty:g} {coin}."}]
+    cash = 0.0
+    if keep < 1:
+        sold = qty * (1 - keep)
+        cash = sold * t["bid"]
+        trades.append({"id": f"t{stamp()}{coin}1", "time": now(), "side": "sell", "coin": coin, "qty": sold,
+                       "price": t["bid"], "eur": round(cash, 2), "fee": 0,
+                       "reason": f"Overgenomen positie: {(1 - keep) * 100:.0f}% stond al in cash en staat nu in {QUOTE}."})
+    s = {"start_value": qty * price, "quote": QUOTE, "started": now(), "cash": cash,
+         "holdings": {coin: qty * keep}, "benchmark": {"coin": coin, "qty": qty, "price": price},
+         "trades": trades, "rounds": []}
     STATE.parent.mkdir(exist_ok=True)
     save(s)
-    print(f"Nieuw spel: EUR {eur:.0f} in {coin} = {qty:.6f} {coin} aan {price:,.2f}")
+    print(f"Nieuw spel: {qty:g} {coin} aan {price:,.2f} {QUOTE}; {qty * keep:.4f} {coin} + {cash:.2f} {QUOTE}")
 
 
 def cmd_snapshot():
