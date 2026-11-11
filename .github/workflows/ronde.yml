@@ -2,13 +2,11 @@ name: Handelsronde
 
 # Speelt om 07:30, 12:00, 18:00 en 23:00 Belgische tijd een papertrading-ronde met Claude,
 # pusht het resultaat en meldt trades via ntfy.
-# Cron loopt in UTC, dus staan zowel de winter- als de zomertijden erin; de job "uur" laat er telkens maar één door.
+# GitHub start geplande taken soms uren te laat. Daarom kijkt de job "uur" elke 10 minuten of er een ronde
+# verschuldigd is (.github/verschuldigd.py); alleen dan start Claude. Zomer- en wintertijd lopen vanzelf mee.
 on:
   schedule:
-    - cron: "30 6 * * *"         # winter (UTC+1): 07:30
-    - cron: "0 11,17,22 * * *"   # winter (UTC+1): 12:00, 18:00, 23:00
-    - cron: "30 5 * * *"         # zomer (UTC+2): 07:30
-    - cron: "0 10,16,21 * * *"   # zomer (UTC+2): 12:00, 18:00, 23:00
+    - cron: "*/10 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -24,18 +22,11 @@ jobs:
     outputs:
       spelen: ${{ steps.check.outputs.spelen }}
     steps:
+      - uses: actions/checkout@v4
       - id: check
-        env:
-          SCHEDULE: ${{ github.event.schedule }}
         run: |
-          OFFSET=$(TZ=Europe/Brussels date +%z)
-          case "$SCHEDULE" in
-            "") SPELEN=true ;;                                   # handmatig gestart
-            "30 6 * * *"|"0 11,17,22 * * *") [ "$OFFSET" = "+0100" ] && SPELEN=true || SPELEN=false ;;
-            "30 5 * * *"|"0 10,16,21 * * *") [ "$OFFSET" = "+0200" ] && SPELEN=true || SPELEN=false ;;
-            *) SPELEN=false ;;
-          esac
-          echo "schema '$SCHEDULE', Brussel $OFFSET -> spelen=$SPELEN"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then SPELEN=true; else SPELEN=$(python3 .github/verschuldigd.py); fi
+          echo "spelen=$SPELEN"
           echo "spelen=$SPELEN" >> "$GITHUB_OUTPUT"
 
   ronde:
