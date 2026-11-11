@@ -8,6 +8,11 @@ on:
   schedule:
     - cron: "*/10 * * * *"
   workflow_dispatch:
+    inputs:
+      forceer:
+        description: "Ook spelen als er geen ronde verschuldigd is"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -25,7 +30,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: check
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then SPELEN=true; else SPELEN=$(python3 .github/verschuldigd.py); fi
+          if [ "${{ inputs.forceer }}" = "true" ]; then SPELEN=true; else SPELEN=$(python3 .github/verschuldigd.py); fi
           echo "spelen=$SPELEN"
           echo "spelen=$SPELEN" >> "$GITHUB_OUTPUT"
 
