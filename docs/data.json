@@ -1,14 +1,14 @@
 {
  "start_eur": 4050.12,
  "started": "2026-11-10T17:53:26Z",
- "updated": "2026-11-11T22:15:06Z",
+ "updated": "2026-11-12T10:56:13Z",
  "fee": 0.004,
  "quote": "USDC",
  "start_qty": 2.0,
- "value_in_coin": 1.982478,
+ "value_in_coin": 1.993063,
  "cash": 1620.54,
- "value": 4105.77,
- "benchmark": 4142.06,
+ "value": 4072.6,
+ "benchmark": 4086.78,
  "benchmark_coin": "ETH",
  "tradable": [
   "ETH"
@@ -17,55 +17,55 @@
   {
    "coin": "ETH",
    "qty": 1.2,
-   "price": 2071.03,
-   "eur": 2485.24
+   "price": 2043.39,
+   "eur": 2452.07
   }
  ],
  "market": [
   {
    "coin": "BTC",
-   "price": 74383.6,
-   "ch24": 0.93
+   "price": 73370.6,
+   "ch24": -0.75
   },
   {
    "coin": "ETH",
-   "price": 2071.01,
-   "ch24": 0.95
+   "price": 2044.42,
+   "ch24": -0.56
   },
   {
    "coin": "SOL",
-   "price": 84.56,
-   "ch24": 1.59
+   "price": 82.86,
+   "ch24": -0.38
   },
   {
    "coin": "XRP",
-   "price": 1.06145,
-   "ch24": 0.6
+   "price": 1.04859,
+   "ch24": -0.23
   },
   {
    "coin": "ADA",
-   "price": 0.177035,
-   "ch24": 1.86
+   "price": 0.172963,
+   "ch24": -0.68
   },
   {
    "coin": "DOGE",
-   "price": 0.0685046,
-   "ch24": 0.83
+   "price": 0.0669872,
+   "ch24": -0.62
   },
   {
    "coin": "LINK",
-   "price": 10.36343,
-   "ch24": 0.77
+   "price": 10.04274,
+   "ch24": -1.35
   },
   {
    "coin": "AVAX",
-   "price": 8.596,
-   "ch24": 2.75
+   "price": 8.493,
+   "ch24": -0.22
   },
   {
    "coin": "DOT",
-   "price": 0.8517,
-   "ch24": 1.09
+   "price": 0.8388,
+   "ch24": 0.02
   }
  ],
  "trades": [
@@ -158,6 +158,17 @@
     "ETH": 2485.24
    },
    "note": "Ronde 6: Geen trades. ETH 2.071 staat 10,5% onder SMA30 (2.314) en 3,9% onder SMA7 (2.155), RSI 31 nog oververkocht, 30d-bodem 2.002 houdt. Plan ongewijzigd: sluit ETH op dagbasis onder 2.000, dan een vijfde van de ETH naar USDC; herstel boven SMA7 (~2.155) betekent USDC terug inzetten tot ca. 80% ETH. Fees van 0,4% maken schuiven zonder signaal nadelig."
+  },
+  {
+   "id": "r202611121056",
+   "time": "2026-11-12T10:56:13Z",
+   "value": 4072.6,
+   "benchmark": 4086.78,
+   "cash": 1620.54,
+   "positions": {
+    "ETH": 2452.07
+   },
+   "note": "Ronde 7: Geen trades. ETH 2.044 staat 11,1% onder SMA30 (2.299) en 3,8% onder SMA7 (2.125), RSI 34 nog zwak en de 30d-bodem van 2.002 ligt dichtbij. Plan ongewijzigd: sluit ETH op dagbasis onder 2.000, dan een vijfde van de ETH naar USDC; herstel boven SMA7 (~2.125) betekent USDC terug inzetten tot ca. 80% ETH. Fees van 0,4% maken schuiven zonder signaal nadelig."
   }
  ]
 }
