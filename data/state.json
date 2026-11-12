@@ -123,6 +123,17 @@
         "ETH": 2424.55
       },
       "note": "Ronde 8: Geen trades. ETH 2.020 staat 12,1% onder SMA30 (2.298) en 4,8% onder SMA7 (2.122), RSI 33; de 30d-bodem is intraday naar 1.981 gezakt maar een dagslot onder 2.000 is er nog niet. Plan: sluit ETH op dagbasis onder 2.000, dan een vijfde van de ETH naar USDC; herstel boven SMA7 (~2.120) betekent USDC terug inzetten tot ca. 80% ETH. Fees van 0,4% maken schuiven zonder signaal nadelig."
+    },
+    {
+      "id": "r202611122352",
+      "time": "2026-11-12T23:52:57Z",
+      "value": 4040.85,
+      "benchmark": 4033.86,
+      "cash": 1620.54,
+      "positions": {
+        "ETH": 2420.32
+      },
+      "note": "Ronde 9: Geen trades. ETH 2.016 staat 12,2% onder SMA30 (2.298) en 4,9% onder SMA7 (2.121), RSI 33 oververkocht; de 30d-bodem van 1.981 is intraday getest maar er is nog geen dagslot onder 2.000. Plan ongewijzigd: sluit ETH op dagbasis onder 2.000, dan een vijfde van de ETH naar USDC; herstel boven SMA7 (~2.120) betekent USDC terug inzetten tot ca. 80% ETH. Fees van 0,4% maken schuiven zonder signaal nadelig."
     }
   ]
 }
