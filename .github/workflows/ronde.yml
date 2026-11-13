@@ -1,8 +1,9 @@
 name: Handelsronde
 
-# Speelt om 07:30, 12:00, 18:00 en 23:00 Belgische tijd een papertrading-ronde met Claude,
+# Speelt om 03:00, 07:30, 12:00, 15:00, 18:00 en 23:00 Belgische tijd een papertrading-ronde met Claude,
 # pusht het resultaat en meldt trades via ntfy.
-# GitHub start geplande taken soms uren te laat. Daarom kijkt de job "uur" elke 10 minuten of er een ronde
+# Een externe wekker (cron-job.org) start deze workflow op die uren; GitHub start geplande taken uren te laat.
+# Als reserve kijkt de job "uur" ook via de eigen cron of er een ronde
 # verschuldigd is (.github/verschuldigd.py); alleen dan start Claude. Zomer- en wintertijd lopen vanzelf mee.
 on:
   schedule:

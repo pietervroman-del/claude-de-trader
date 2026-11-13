@@ -7,7 +7,7 @@ import json
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
-UREN = [(7, 30), (12, 0), (18, 0), (23, 0)]
+UREN = [(3, 0), (7, 30), (12, 0), (15, 0), (18, 0), (23, 0)]
 TZ = ZoneInfo("Europe/Brussels")
 
 nu = datetime.now(TZ)

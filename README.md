@@ -1,7 +1,7 @@
 # Claude de Trader
 
 Een experiment: Claude krijgt virtueel **2 ETH** en beslist volledig zelfstandig hoeveel daarvan in ETH of in USDC
-staat, op echte Kraken-koersen (paar ETH/USDC). Vier keer per dag (07:30, 12:00, 18:00 en 23:00 Belgische tijd)
+staat, op echte Kraken-koersen (paar ETH/USDC). Zes keer per dag (03:00, 07:30, 12:00, 15:00, 18:00 en 23:00 Belgische tijd)
 speelt Claude in GitHub Actions een ronde (`.github/workflows/ronde.yml`): markt bekijken, beslissen, de redenering
 loggen. Bij elke koop of verkoop volgt een gsm-melding via ntfy. De tegenstander: gewoon 2 ETH houden.
 
