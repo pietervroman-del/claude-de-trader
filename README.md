@@ -13,6 +13,12 @@ Geen echt geld, geen echte trades, geen beleggingsadvies.
 - `CLAUDE.md`: wat Claude in elke ronde doet
 - `archive/`: afgelopen spellen
 
+## Strategie (vanaf 14 november 2026)
+- 50% blijft altijd ETH. De andere 50% staat in ETH zolang de dag boven het 50-dagengemiddelde sluit, anders in USDC.
+- Gekozen na backtests op 3 jaar dagdata (`research/`). Een schaduwportefeuille volgt ter vergelijking de oude
+  30-wekenregel.
+- Succescriterium, vooraf vastgelegd: op 14 mei 2027 meer dan 2 ETH waard én meer dan de schaduwportefeuille.
+
 ## Spelregels (vanaf 10 november 2026)
 - Startkapitaal: 2 ETH. De 60/40-verdeling uit het korte euro-spel liep mee: 1,2 ETH en de rest in USDC.
 - Handelen alleen ETH tegen USDC; de andere munten dienen enkel om de markt te lezen.

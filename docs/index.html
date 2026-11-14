@@ -116,7 +116,7 @@ footer{color:var(--muted);font-size:12.5px}
         <div class="market" id="market"><p class="empty">Nog geen koersen.</p></div>
       </section>
       <section class="panel" id="archerPanel" hidden>
-        <h2>Strategie · kern + trend</h2>
+        <h2>Strategie · kern 50% + trend 50 dagen</h2>
         <div class="market" id="archer"></div>
       </section>
       <section class="panel">
@@ -128,7 +128,8 @@ footer{color:var(--muted);font-size:12.5px}
           <li>Elke trade kost 0,40% fee, zoals bij Kraken voor kleine volumes.</li>
           <li>Claude handelt alleen ETH tegen USDC. De andere munten mag hij bekijken, niet kopen.</li>
           <li>Te kloppen: gewoon 2 ETH houden. Claude wint als zijn portefeuille meer dan 2 ETH waard is.</li>
-          <li>Strategie sinds 14 november: 50% blijft altijd ETH. De andere 50% staat in ETH zolang de week boven het 30-wekengemiddelde sluit, anders in USDC. Gekozen na een backtest op 10 jaar ETH-data; de methode van de podcast Mind to Invest dient als extra context.</li>
+          <li>Strategie sinds 14 november: 50% blijft altijd ETH. De andere 50% staat in ETH zolang de dag boven het 50-dagengemiddelde sluit, anders in USDC. Gekozen na backtests op 3 jaar dagdata.</li>
+          <li>Succescriterium, vooraf vastgelegd: op 14 mei 2027 meer dan 2 ETH waard én meer dan een schaduwportefeuille met de oude 30-wekenregel.</li>
         </ol>
       </section>
     </div>
@@ -199,9 +200,11 @@ function render(s){
   if(s.archer){
     const a=s.archer, n=v=>Number(v).toLocaleString("nl-BE",{maximumFractionDigits:0}), st=s.strategie;
     const sig=a.signaal_A?'<span class="up">koopsignaal</span>':a.signaal_B?'<span class="up">ommekeer</span>':"geen signaal";
-    const rows=[...(st?[["Weekslot / 30-wekengem.",`${n(st.weekslot)} / ${n(st.sma30w)}`],
+    const sh=s.schaduw, inE=x=>(x/s.benchmark*(s.start_qty||2)).toLocaleString("nl-BE",{minimumFractionDigits:4,maximumFractionDigits:4})+" ETH";
+    const rows=[...(st?[["Dagslot / 50-dagengem.",`${n(st.slot)} / ${n(st.sma)}`],
       ["Trend",st.boven?'<span class="up">boven: doel 100% ETH</span>':'<span class="down">onder: doel 50% ETH</span>'],
       ["Nu in ETH",`${Math.round(st.nu_eth*100)}%`]]:[]),
+      ...(sh&&sh.waarde?[["Schaduw (oude 30-wekenregel)",inE(sh.waarde)],["Claude nu",inE(s.value)]]:[]),
       ["Archer: structuur",a.structuur],["Laatste impuls",`${n(a.impuls[0])} → ${n(a.impuls[1])}`],
       ["Koopzone",`${n(a.zone[0])} – ${n(a.zone[1])}`],["Laatste week",`${a.laatste_week}${a.in_zone?", in de zone":""}`],
       ["Archer: signaal",sig],["Archer: doelen",`${n(a.doel1)} / ${n(a.doel2)}`]];

@@ -12,18 +12,20 @@ Vorige spellen staan in `archive/`. Publiek dashboard: `docs/index.html` (GitHub
 - Benchmark: gewoon 2 ETH houden. Je wint als je portefeuille meer dan 2 ETH waard is (`status` toont dat).
   Elke trade moet dus beter doen dan niets doen, fees inbegrepen.
 
-## Strategie: kern + trend (vanaf 14 nov 2026)
-Gekozen na een backtest op ETH-weekdata 2017-2026 (`research/hybride_backtest.py`, uitleg in
-`research/archer-strategie.md`): deze variant deed in beide helften van die periode beter dan houden, ook met andere
-instellingen, met zo'n 3 transacties per jaar. Archer puur bleef ver achter.
+## Strategie: kern 50% + trend op het 50-dagengemiddelde (vanaf 14 nov 2026, avond)
+Gekozen na een backtest op 3 jaar dagdata (`research/swing_backtest.py`, uitleg in `research/archer-strategie.md`):
+in beide helften en bij 40-75 dagen beter dan houden, ook met driedubbele kosten, ~1-2 trades per maand.
 1. **Kern**: 50% van de portefeuille blijft altijd ETH. Nooit verkopen.
-2. **Trend**: sluit de laatste gesloten weekcandle **boven het 30-wekengemiddelde**, dan is het doel 100% ETH;
-   sluit ze **eronder**, dan 50% ETH en 50% USDC. `status` berekent dit in het blok "STRATEGIE kern + trend".
+2. **Trend**: sloot de laatste **gesloten dagcandle boven het 50-dagengemiddelde**, dan is het doel 100% ETH;
+   sloot ze **eronder**, dan 50% ETH en 50% USDC. `status` berekent dit in het blok "STRATEGIE".
 3. **Bijsturen** alleen als de verdeling meer dan 5 procentpunt van het doel afwijkt, en dan in één keer naar het doel.
-   De trend verandert alleen bij een weeksluiting; de meeste rondes zijn dus "niets doen".
-4. **Archer-blok** (structuur, Fibonacci-zones) is alleen nog context in je analyse. Geen Archer-stops of -plannen meer:
-   die zouden de kern verkopen. Wis een bestaand plan met `python3 trader.py plan wis`.
-5. Afwijken van deze regels mag alleen gemotiveerd: schrijf in de ronde welke regel je niet volgt en waarom.
+   Het doel verandert alleen na een dagsluiting (00:00 UTC); de meeste rondes zijn dus "niets doen".
+4. Geen grenzen verleggen, geen eigen stops, geen extra trades op gevoel. Het weekbeeld en het Archer-blok zijn
+   alleen context voor je uitleg.
+5. Afwijken mag alleen gemotiveerd: schrijf in de ronde welke regel je niet volgt en waarom.
+6. **Schaduw**: een schaduwportefeuille volgt automatisch de oude 30-wekenregel (wordt bijgewerkt bij `round`).
+7. **Succescriterium (vast, niet aanpassen)**: op 14 mei 2027 is de portefeuille meer dan 2 ETH waard én meer dan
+   de schaduwportefeuille.
 
 ## Koersen
 Lukt Kraken niet rechtstreeks (bv. in de Claude-cloud), dan gebruikt `trader.py` de momentopname in
@@ -31,12 +33,12 @@ Lukt Kraken niet rechtstreeks (bv. in de Claude-cloud), dan gebruikt `trader.py`
 
 ## Stappen
 0. `git pull --rebase origin main` (niet nodig in GitHub Actions; daar regelt de workflow git).
-1. `python3 trader.py status`: marktoverzicht, ETH in detail, het blok "STRATEGIE kern + trend" (doelverdeling en
-   wat er bijgestuurd moet worden) en het Archer-blok als context.
+1. `python3 trader.py status`: marktoverzicht, ETH in detail, het blok "STRATEGIE" (doelverdeling, wat er
+   bijgestuurd moet worden, schaduw en criterium) en het Archer-blok als context.
 2. Lees de laatste 3 rondes in `data/state.json` om je eigen plan en niveaus te kennen.
-3. Pas de regels van kern + trend toe. Niets doen is ook een beslissing; overtraden kost fees.
+3. Pas de regels van de strategie toe. Niets doen is ook een beslissing; overtraden kost fees.
 4. Trades: `python3 trader.py buy ETH <USDC> "reden"` of `python3 trader.py sell ETH all|<USDC> "reden"`.
-5. Altijd: `python3 trader.py round "Ronde N: analyse en plan"` (Nederlands, 2 tot 4 zinnen, concreet: weekslot
-   tegenover het 30-wekengemiddelde, doelverdeling, en wat er bij de volgende weeksluiting kan veranderen).
+5. Altijd: `python3 trader.py round "Ronde N: analyse en plan"` (Nederlands, 2 tot 4 zinnen, concreet: dagslot
+   tegenover het 50-dagengemiddelde, doelverdeling, en bij welke koers het doel bij de volgende dagsluiting omslaat).
 6. `python3 trader.py export`.
 7. Buiten GitHub Actions: commit `data/state.json` en `docs/data.json` als `Ronde N: <korte samenvatting>` en push naar `main`.
