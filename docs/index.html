@@ -115,6 +115,10 @@ footer{color:var(--muted);font-size:12.5px}
         <h2>Markt bij laatste ronde · 24u</h2>
         <div class="market" id="market"><p class="empty">Nog geen koersen.</p></div>
       </section>
+      <section class="panel" id="archerPanel" hidden>
+        <h2>Archer-methode · weekgrafiek</h2>
+        <div class="market" id="archer"></div>
+      </section>
       <section class="panel">
         <h2>Spelregels</h2>
         <ol class="rules">
@@ -124,6 +128,7 @@ footer{color:var(--muted);font-size:12.5px}
           <li>Elke trade kost 0,40% fee, zoals bij Kraken voor kleine volumes.</li>
           <li>Claude handelt alleen ETH tegen USDC. De andere munten mag hij bekijken, niet kopen.</li>
           <li>Te kloppen: gewoon 2 ETH houden. Claude wint als zijn portefeuille meer dan 2 ETH waard is.</li>
+          <li>Sinds 14 november volgt Claude de methode van de podcast Mind to Invest: alleen gesloten weekcandles, Fibonacci-zones en vooraf een stop en doelen met minstens 3× winst tegenover risico.</li>
         </ol>
       </section>
     </div>
@@ -189,6 +194,19 @@ function render(s){
   el("alloc").innerHTML=parts.filter(p=>p.eur>0).map(p=>`<b title="${p.coin}" style="width:${p.eur/s.value*100}%;background:${COLORS[p.coin]||"var(--accent)"}"></b>`).join("");
   el("pos").innerHTML=parts.map(p=>`<tr><td><span class="dot" style="background:${COLORS[p.coin]||"var(--accent)"}"></span>${p.coin==="CASH"?`Cash (${QUOTE})`:p.coin}</td>
     <td class="r num">${p.qty==null?"—":qtyFmt(p.qty)}</td><td class="r num">${eur(p.eur)}</td><td class="r num">${(p.eur/s.value*100).toFixed(0)}%</td></tr>`).join("");
+
+  // Archer-methode en huidig plan
+  if(s.archer){
+    const a=s.archer, n=v=>Number(v).toLocaleString("nl-BE",{maximumFractionDigits:0});
+    const sig=a.signaal_A?'<span class="up">koopsignaal</span>':a.signaal_B?'<span class="up">ommekeer</span>':"geen signaal";
+    const rows=[["Structuur",a.structuur],["Laatste impuls",`${n(a.impuls[0])} → ${n(a.impuls[1])}`],
+      ["Koopzone",`${n(a.zone[0])} – ${n(a.zone[1])}`],["Laatste week",`${a.laatste_week}${a.in_zone?", in de zone":""}`],
+      ["Signaal",sig],
+      ["Plan: stop",s.plan?n(s.plan.stop):"—"],["Plan: doel 1",s.plan?n(s.plan.doel1):`${n(a.doel1)} (−0,27)`],
+      ["Plan: doel 2",s.plan?n(s.plan.doel2):`${n(a.doel2)} (−0,618)`]];
+    el("archer").innerHTML=rows.map(([k,v])=>`<div><span>${k}</span><span class="num">${v}</span></div>`).join("");
+    el("archerPanel").hidden=false;
+  }
 
   // markt
   if(s.market?.length) el("market").innerHTML=s.market.map(m=>`<div><span>${m.coin}</span><span class="num ${cls(m.ch24)}">${pct(m.ch24)}</span></div>`).join("");

@@ -5,6 +5,7 @@ Gebruik:
   python trader.py status                       koersen, 24u/7d/30d, SMA's, RSI, portefeuille
   python trader.py buy  ETH 200 "reden"         koop ETH voor 200 USDC
   python trader.py sell ETH all "reden"         verkoop alle ETH (of een USDC-bedrag)
+  python trader.py plan 1640 3150 3600 "reden"  leg stop, doel 1 en doel 2 vast (plan wis = geen plan)
   python trader.py round "analyse en plan"      log een ronde (ook zonder trade)
   python trader.py export                       schrijf docs/data.json voor het dashboard
   python trader.py snapshot                     schrijf data/market.json (draait in GitHub Actions)
@@ -91,6 +92,115 @@ def weekly(pair):
         return snapshot()["weekly"][coin]
 
 
+# --- Archer-methode (Mind to Invest): structuur en Fibonacci op de weekgrafiek, zie research/archer-strategie.md ---
+ZIGZAG = 0.25  # een top/bodem telt pas na 25% terugkeer
+
+
+def week_candles(pair):
+    """Gesloten weekcandles (de lopende week valt weg: een open candle telt niet)."""
+    if _snapshot is not None and "week_ohlc" in _snapshot:
+        rows = _snapshot["week_ohlc"]
+    else:
+        try:
+            res = kraken(f"OHLC?pair={pair}&interval=10080")
+            rows = next(v for k, v in res.items() if k != "last")[:-1]
+        except OSError:
+            rows = snapshot()["week_ohlc"]
+    return [{"t": datetime.fromtimestamp(r[0], timezone.utc), "o": float(r[1]), "h": float(r[2]),
+             "l": float(r[3]), "c": float(r[4])} for r in rows]
+
+
+def month_candles(weeks):
+    """Maandcandles samengesteld uit weekcandles (benadering: week telt bij de maand waarin ze start)."""
+    months = {}
+    for w in weeks:
+        k = (w["t"].year, w["t"].month)
+        m = months.setdefault(k, {"t": w["t"], "o": w["o"], "h": w["h"], "l": w["l"], "c": w["c"]})
+        m["h"], m["l"], m["c"] = max(m["h"], w["h"]), min(m["l"], w["l"]), w["c"]
+    now_k = (datetime.now(timezone.utc).year, datetime.now(timezone.utc).month)
+    return [m for k, m in sorted(months.items()) if k != now_k]
+
+
+def zigzag(w, p=ZIGZAG):
+    """Bevestigde toppen/bodems: [(index, 'H'/'L', prijs)], afwisselend."""
+    out, mode, ext = [], None, 0
+    for i in range(1, len(w)):
+        if mode is None:
+            lo = min(range(i + 1), key=lambda j: w[j]["l"]); hi = max(range(i + 1), key=lambda j: w[j]["h"])
+            if w[i]["h"] >= w[lo]["l"] * (1 + p):
+                out.append((lo, "L", w[lo]["l"])); mode, ext = "up", i
+            elif w[i]["l"] <= w[hi]["h"] * (1 - p):
+                out.append((hi, "H", w[hi]["h"])); mode, ext = "down", i
+        elif mode == "up":
+            if w[i]["h"] >= w[ext]["h"]:
+                ext = i
+            elif w[i]["l"] <= w[ext]["h"] * (1 - p):
+                out.append((ext, "H", w[ext]["h"])); mode, ext = "down", i
+        else:
+            if w[i]["l"] <= w[ext]["l"]:
+                ext = i
+            elif w[i]["h"] >= w[ext]["l"] * (1 + p):
+                out.append((ext, "L", w[ext]["l"])); mode, ext = "up", i
+    return out
+
+
+def archer(pair):
+    w = week_candles(pair)
+    piv = zigzag(w)
+    highs = [x for x in piv if x[1] == "H"]; lows = [x for x in piv if x[1] == "L"]
+    H1, H2, L1, L2 = highs[-2][2], highs[-1][2], lows[-2][2], lows[-1][2]
+    struct = ("bullish (hogere toppen en bodems)" if H2 > H1 and L2 > L1 else
+              "bearish (lagere toppen en bodems)" if H2 < H1 and L2 < L1 else
+              "gemengd (" + ("hogere" if H2 > H1 else "lagere") + " top, " + ("hogere" if L2 > L1 else "lagere") + " bodem)")
+    # laatste opwaartse impuls: laatste bodem vóór de laatste top
+    lo = [x for x in lows if x[0] < highs[-1][0]][-1]
+    R = H2 - lo[2]
+    fib = {"r618": H2 - 0.618 * R, "r786": H2 - 0.786 * R, "r886": H2 - 0.886 * R,
+           "x127": H2 + 0.27 * R, "x1618": H2 + 0.618 * R}
+    last = w[-1]
+    green = last["c"] > last["o"]
+    in_zone = last["l"] <= fib["r618"] and last["c"] >= fib["r786"]
+    stop = fib["r886"] * 0.99
+    rr = (fib["x127"] - last["c"]) / (last["c"] - stop) if last["c"] > stop else 0
+    return {"weeks": w[-4:], "months": month_candles(w)[-3:], "piv": [(w[i]["t"], k, v) for i, k, v in piv[-4:]],
+            "struct": struct, "impuls": (lo[2], H2), "fib": fib, "last_high": H2, "last_low": L2,
+            "signaal_A": H2 > H1 and in_zone and green and rr >= 3, "in_zone": in_zone, "hogere_top": H2 > H1, "groen": green, "rr": rr, "stop": stop,
+            "signaal_B": H2 < H1 and green and last["c"] > H2}
+
+
+def archer_summary():
+    a = archer(PAIRS[TRADABLE[0]])
+    r = lambda x: round(x, 2)
+    return {"structuur": a["struct"], "impuls": [r(x) for x in a["impuls"]],
+            "zone": [r(a["fib"]["r786"]), r(a["fib"]["r618"])], "stop": r(a["stop"]),
+            "doel1": r(a["fib"]["x127"]), "doel2": r(a["fib"]["x1618"]),
+            "laatste_week": "groen" if a["groen"] else "rood", "in_zone": a["in_zone"],
+            "signaal_A": a["signaal_A"], "signaal_B": a["signaal_B"], "lagere_top": r(a["last_high"])}
+
+
+def print_archer(c, tk):
+    a = archer(PAIRS[c])
+    kleur = lambda x: "groen" if x["c"] > x["o"] else "rood"
+    print(f"\n{c} volgens de Archer-methode (weekgrafiek, enkel gesloten candles):")
+    print("  Maandcandles: " + " | ".join(f"{m['t']:%b %Y} {kleur(m)} {m['o']:,.0f}->{m['c']:,.0f}" for m in a["months"]))
+    print("  Weekcandles:  " + " | ".join(f"{x['t']:%d/%m} {kleur(x)} {x['c']:,.0f}" for x in a["weeks"]))
+    print("  Toppen/bodems (zigzag 25%): " + ", ".join(f"{k} {v:,.0f} ({t:%b %Y})" for t, k, v in a["piv"]))
+    print(f"  Structuur: {a['struct']}")
+    f, (lo, hi) = a["fib"], a["impuls"]
+    print(f"  Laatste impuls {lo:,.0f} -> {hi:,.0f}: koopzone 61,8% {f['r618']:,.0f} tot 78,6% {f['r786']:,.0f}, "
+          f"stop onder 88,6% ~{a['stop']:,.0f}; doel 1 (-0,27) {f['x127']:,.0f}, doel 2 (-0,618) {f['x1618']:,.0f}")
+    print(f"  Laatste week: {'groen' if a['groen'] else 'rood'}, {'in' if a['in_zone'] else 'niet in'} de koopzone, "
+          f"winst/risico tot doel 1 bij instap nu: {a['rr']:.1f}x")
+    print(f"  Signaal A (koop bij terugval na hogere top: groene week in de zone, winst >= 3x risico): "
+          f"{'JA' if a['signaal_A'] else 'nee'}")
+    if a["hogere_top"]:
+        print(f"  Signaal B (ommekeer): al gebeurd, laatste top {a['last_high']:,.0f} ligt hoger dan de vorige")
+    else:
+        print(f"  Signaal B (ommekeer: groen weekslot boven lagere top {a['last_high']:,.0f}): "
+              f"{'JA' if a['signaal_B'] else 'nee'}")
+    print(f"  Structuur kapot bij een weekslot onder de laatste bodem {a['last_low']:,.0f}")
+
+
 def now():
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -131,6 +241,16 @@ def cmd_status(s, tk):
         print(f"  30d: {w['ch30']:+.1f}%, bereik {w['low30']:,.0f} - {w['high30']:,.0f}")
         print(f"  SMA7 {w['sma7']:,.0f} ({(t['last']/w['sma7']-1)*100:+.1f}%), "
               f"SMA30 {w['sma30']:,.0f} ({(t['last']/w['sma30']-1)*100:+.1f}%), RSI14 {w['rsi14']:.0f}")
+        print_archer(c, tk)
+    plan = s.get("plan")
+    if plan:
+        px = tk[TRADABLE[0]]["last"]
+        print(f"\nHuidig plan (sinds {plan['time']}): stop {plan['stop']:,.0f}, doel 1 {plan['doel1']:,.0f}, "
+              f"doel 2 {plan['doel2']:,.0f}" + ("  <<< STOP GERAAKT" if px <= plan["stop"] else "")
+              + ("  <<< DOEL 1 GERAAKT" if px >= plan["doel1"] else ""))
+        print(f"  Reden: {plan['reason']}")
+    else:
+        print("\nHuidig plan: geen (leg stop en doelen vast met `trader.py plan`)")
     print(f"\nCash: {s['cash']:.2f} {QUOTE}")
     for c, q in s["holdings"].items():
         print(f"{c}: {q:.6f} = {q * tk[c]['bid']:.2f} {QUOTE}")
@@ -200,10 +320,25 @@ def cmd_export(s, tk):
                       for c, q in s["holdings"].items()],
         "market": [{"coin": c, "price": tk[c]["last"], "ch24": round((tk[c]["last"]/tk[c]["open24"]-1)*100, 2)}
                    for c in PAIRS],
-        "trades": s["trades"], "rounds": s["rounds"],
+        "trades": s["trades"], "rounds": s["rounds"], "plan": s.get("plan"),
+        "archer": archer_summary(),
     }
     PUBLIC.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"docs/data.json geschreven (waarde {v:.2f} {QUOTE})")
+
+
+def cmd_plan(s, args):
+    """plan <stop> <doel1> <doel2> "reden"  |  plan wis "reden" """
+    if args and args[0] == "wis":
+        s["plan"] = None
+        print("Plan gewist")
+    else:
+        if len(args) < 4:
+            raise SystemExit('Gebruik: trader.py plan <stop> <doel1> <doel2> "reden"  of  trader.py plan wis')
+        s["plan"] = {"time": now(), "stop": float(args[0]), "doel1": float(args[1]), "doel2": float(args[2]),
+                     "reason": args[3]}
+        print(json.dumps(s["plan"], ensure_ascii=False))
+    save(s)
 
 
 def cmd_init(qty, keep):
@@ -232,7 +367,9 @@ def cmd_init(qty, keep):
 
 
 def cmd_snapshot():
-    snap = {"time": now(), "tickers": live_tickers(), "weekly": {c: live_weekly(p) for c, p in PAIRS.items()}}
+    week = next(v for k, v in kraken(f"OHLC?pair={PAIRS[TRADABLE[0]]}&interval=10080").items() if k != "last")[:-1]
+    snap = {"time": now(), "tickers": live_tickers(), "weekly": {c: live_weekly(p) for c, p in PAIRS.items()},
+            "week_ohlc": week}
     MARKET.write_text(json.dumps(snap, indent=1) + "\n", encoding="utf-8")
     print(f"data/market.json geschreven ({snap['time']})")
 
@@ -254,6 +391,8 @@ def main(argv):
         cmd_round(s, tk, argv[2] if len(argv) > 2 else "")
     elif cmd == "export":
         cmd_export(s, tk)
+    elif cmd == "plan":
+        cmd_plan(s, argv[2:])
     else:
         raise SystemExit(f"Onbekend commando {cmd}")
 
