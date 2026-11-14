@@ -64,3 +64,19 @@ Eindwaarde tegenover houden, 30-wekengemiddelde (tussen haakjes: 20 / 40 weken),
 Geen enkele variant is in beide helften én bij alle instellingen beter dan de vaste kern; de grootste daling wordt
 nergens wezenlijk kleiner. De bevestiging van een bearmarkt komt te laat: verkopen gebeurt dan dicht bij de bodem.
 Met vijf geteste varianten is een toevallige winnaar ook waarschijnlijk. **Besluit: vaste kern van 50% blijft.**
+
+## Herberekend op 2021-nu (keuze gebruiker), gesplitst in 2021-2023 en 2024-nu
+Eindwaarde tegenover houden (1,00 = gelijk). Kern+trend = de variant in de bot (enkel bijsturen bij omslag).
+
+| variant | 2021-2023 | 2024-nu | 2021-nu |
+|---|---|---|---|
+| Archer puur | 0,55 | 0,85 | 0,47 |
+| trend (100% of 0%), 30w | 2,06 | 0,74 | 1,80 |
+| kern 50% + trend, 20w | 1,27 | 1,11 | 1,65 |
+| **kern 50% + trend, 30w (bot)** | 1,64 | **0,81** | 1,56 |
+| kern 50% + trend, 40w | 1,43 | 0,67 | 1,12 |
+
+ETH: begin 2021 ~1.212, begin 2022 ~3.539, begin 2024 ~2.210, nu ~2.053 USD.
+**Lezing:** de voorsprong sinds 2021 komt bijna volledig uit 2022 (de crash ontwijken). Sinds 2024, een markt
+die op en neer gaat zonder duidelijke trend, doet geen enkele variant betrouwbaar beter dan gewoon houden;
+trendfilters verkopen en kopen dan telkens te laat terug.

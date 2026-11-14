@@ -1,4 +1,4 @@
-"""Vergelijkt strategieën op ETH-weekcandles (Kraken, 2016 – nu), gemeten tegenover gewoon ETH houden.
+"""Vergelijkt strategieën op ETH-weekcandles (Kraken), standaard 2021 – nu, gemeten tegenover gewoon ETH houden.
 
 Varianten:
   houden       100% ETH, nooit handelen
@@ -199,16 +199,14 @@ if __name__ == "__main__":
     if "robuust" in sys.argv:
         for zz in (0.20, 0.25, 0.30):
             for sma_n in (20, 30, 40):
-                rows = table(w, "2017-01-01", zz=zz, sma_n=sma_n)
+                rows = table(w, "2021-01-01", zz=zz, sma_n=sma_n)
                 print(f"zigzag {zz:.0%} SMA{sma_n}w: " + "  ".join(f"{v}={inEth:.2f}" for v, _, inEth, _, _ in rows))
     else:
-        for label, sd in [("2017 - nu", "2017-01-01"), ("2017 - 2020 (deel 1)", "2017-01-01"),
-                          ("2021 - nu (deel 2)", "2021-01-01"), ("2022 - nu", "2022-01-01")]:
-            if "deel 1" in label:
-                cut = next(i for i, x in enumerate(w) if x["t"] >= datetime(2021, 1, 1, tzinfo=timezone.utc))
-                rows = table(w[:cut], sd)
-            else:
-                rows = table(w, sd)
-            print(f"\n{label}   (x = eindwaarde per 1 USD, in_ETH = eindwaarde tegenover houden)")
+        # Standaard (keuze gebruiker, 14 nov 2026): alleen 2021-nu, gesplitst in twee helften om toeval te herkennen.
+        cut = next(i for i, x in enumerate(w) if x["t"] >= datetime(2024, 1, 1, tzinfo=timezone.utc))
+        for label, ww, sd in [("2021 - nu", w, "2021-01-01"), ("2021 - 2023 (deel 1)", w[:cut], "2021-01-01"),
+                              ("2024 - nu (deel 2)", w, "2024-01-01")]:
+            rows = table(ww, sd)
+            print(f"\n{label}   (in_ETH = eindwaarde tegenover houden, 1,00 = gelijk)")
             for v, x, inEth, mdd, n in rows:
-                print(f"  {v:<12} x{x:>9.2f}   in_ETH {inEth:5.2f}   max_daling {mdd:4.0%}   transacties {n}")
+                print(f"  {v:<12} in_ETH {inEth:5.2f}   max_daling {mdd:4.0%}   transacties {n}")
