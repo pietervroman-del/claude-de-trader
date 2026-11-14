@@ -12,20 +12,22 @@ Vorige spellen staan in `archive/`. Publiek dashboard: `docs/index.html` (GitHub
 - Benchmark: gewoon 2 ETH houden. Je wint als je portefeuille meer dan 2 ETH waard is (`status` toont dat).
   Elke trade moet dus beter doen dan niets doen, fees inbegrepen.
 
-## Strategie: kern 50% + trend op het 50-dagengemiddelde (vanaf 14 nov 2026, avond)
+## Strategie: trend op het 50-dagengemiddelde, zonder vaste kern (vanaf 14 nov 2026)
 Gekozen na een backtest op 3 jaar dagdata (`research/swing_backtest.py`, uitleg in `research/archer-strategie.md`):
 in beide helften en bij 40-75 dagen beter dan houden, ook met driedubbele kosten, ~1-2 trades per maand.
-1. **Kern**: 50% van de portefeuille blijft altijd ETH. Nooit verkopen.
+1. **Geen vaste kern** (keuze gebruiker, 14 nov 2026): alles volgt de trendregel. In de backtest gaf dat het
+   meeste ETH op het einde, maar ook tot 30% achterstand op gewoon houden onderweg.
 2. **Trend**: sloot de laatste **gesloten dagcandle boven het 50-dagengemiddelde**, dan is het doel 100% ETH;
-   sloot ze **eronder**, dan 50% ETH en 50% USDC. `status` berekent dit in het blok "STRATEGIE".
+   sloot ze **eronder**, dan 0% ETH (alles in USDC). `status` berekent dit in het blok "STRATEGIE".
 3. **Bijsturen** alleen als de verdeling meer dan 5 procentpunt van het doel afwijkt, en dan in één keer naar het doel.
    Het doel verandert alleen na een dagsluiting (00:00 UTC); de meeste rondes zijn dus "niets doen".
 4. Geen grenzen verleggen, geen eigen stops, geen extra trades op gevoel. Het weekbeeld en het Archer-blok zijn
    alleen context voor je uitleg.
 5. Afwijken mag alleen gemotiveerd: schrijf in de ronde welke regel je niet volgt en waarom.
-6. **Schaduw**: een schaduwportefeuille volgt automatisch de oude 30-wekenregel (wordt bijgewerkt bij `round`).
+6. **Schaduwen**: twee schaduwportefeuilles lopen automatisch mee (bijgewerkt bij `round`): kern 50% + 30 weken,
+   en kern 50% + 50 dagen.
 7. **Succescriterium (vast, niet aanpassen)**: op 14 mei 2027 is de portefeuille meer dan 2 ETH waard én meer dan
-   de schaduwportefeuille.
+   beide schaduwportefeuilles.
 
 ## Koersen
 Lukt Kraken niet rechtstreeks (bv. in de Claude-cloud), dan gebruikt `trader.py` de momentopname in

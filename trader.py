@@ -169,12 +169,14 @@ def archer(pair):
 
 
 # --- Hoofdstrategie sinds 14 nov 2026 (avond): kern + trend op de daggrafiek (research/swing_backtest.py) ---
-KERN = 0.5         # dit deel blijft altijd ETH
+KERN = 0.0         # vaste kern: dit deel blijft altijd ETH (0% sinds 14 nov 2026, op vraag van de gebruiker)
 SMA_DAGEN = 50     # tactisch deel in ETH zolang de laatste gesloten dag boven dit gemiddelde sloot
 SMA_WEKEN = 30     # oude regel, loopt mee als schaduwportefeuille ter vergelijking
 DREMPEL = 0.05     # pas bijsturen bij meer dan 5 procentpunt afwijking
-CRITERIUM = ("Op 14 mei 2027 is de portefeuille meer dan 2 ETH waard én meer dan de schaduwportefeuille "
-             "met de oude 30-wekenregel.")
+CRITERIUM = ("Op 14 mei 2027 is de portefeuille meer dan 2 ETH waard én meer dan beide schaduwportefeuilles "
+             "(kern 50% + 30 weken, en kern 50% + 50 dagen).")
+# Schaduwportefeuilles ter vergelijking: naam -> (kern, 'week' of 'dag')
+SCHADUWEN = {"kern 50% + trend 30 weken": (0.5, "week"), "kern 50% + trend 50 dagen": (0.5, "dag")}
 
 
 def day_candles(pair):
@@ -213,41 +215,47 @@ def kern_trend(s, tk):
     return k
 
 
-def schaduw(s, tk, bijwerken=False):
-    """Schaduwportefeuille die de oude 30-wekenregel volgt, met dezelfde fees. Start bij de omschakeling."""
+def schaduwen(s, tk, bijwerken=False):
+    """Schaduwportefeuilles met dezelfde fees; elk start bij zijn eerste ronde. Geeft {naam: waarde in USDC}."""
     c = TRADABLE[0]
-    sh = s.get("schaduw")
-    if sh is None:
-        sh = s["schaduw"] = {"start": now(), "regel": f"kern {KERN:.0%} + trend {SMA_WEKEN} weken",
-                             "eth": s["holdings"].get(c, 0.0), "cash": s["cash"], "trades": 0}
-    if bijwerken:
-        px = tk[c]["bid"]
-        v = sh["cash"] + sh["eth"] * px
-        doel = doel_week()["doel"]
-        diff = doel * v - sh["eth"] * px
-        if abs(diff) > DREMPEL * v:
-            if diff > 0:
-                sh["cash"] -= diff; sh["eth"] += diff * (1 - FEE) / tk[c]["ask"]
-            else:
-                q = -diff / px; sh["eth"] -= q; sh["cash"] += q * px * (1 - FEE)
-            sh["trades"] += 1
-    return sh["cash"] + sh["eth"] * tk[c]["bid"]
+    sh = s.setdefault("schaduwen", {})
+    if "schaduw" in s:                       # oude enkele schaduw (30 weken) overnemen
+        oud = s.pop("schaduw")
+        sh.setdefault("kern 50% + trend 30 weken", {k: oud[k] for k in ("start", "eth", "cash", "trades")})
+    uit = {}
+    for naam, (kern, tf) in SCHADUWEN.items():
+        x = sh.get(naam)
+        if x is None:
+            x = sh[naam] = {"start": now(), "eth": s["holdings"].get(c, 0.0), "cash": s["cash"], "trades": 0}
+        if bijwerken:
+            px = tk[c]["bid"]
+            v = x["cash"] + x["eth"] * px
+            boven = (doel_week() if tf == "week" else doel_dag())["boven"]
+            diff = (1.0 if boven else kern) * v - x["eth"] * px
+            if abs(diff) > DREMPEL * v:
+                if diff > 0:
+                    x["cash"] -= diff; x["eth"] += diff * (1 - FEE) / tk[c]["ask"]
+                else:
+                    q = -diff / px; x["eth"] -= q; x["cash"] += q * px * (1 - FEE)
+                x["trades"] += 1
+        uit[naam] = x["cash"] + x["eth"] * tk[c]["bid"]
+    return uit
 
 
 def print_kern_trend(s, tk):
     k = kern_trend(s, tk)
-    print(f"\nSTRATEGIE kern 50% + trend op het {SMA_DAGEN}-dagengemiddelde (hoofdregel):")
+    print(f"\nSTRATEGIE kern {KERN:.0%} + trend op het {SMA_DAGEN}-dagengemiddelde (hoofdregel):")
     print(f"  Laatste gesloten dag ({k['dag']:%d/%m}): slot {k['slot']:,.0f} tegenover {SMA_DAGEN}-dagengemiddelde "
           f"{k['sma']:,.0f} -> {'BOVEN' if k['boven'] else 'ONDER'} -> doel {k['doel']:.0%} ETH")
     print(f"  Nu {k['nu']:.0%} ETH. " + (
         f"Bijsturen: {'koop' if k['actie'] > 0 else 'verkoop'} ETH voor ~{abs(k['actie']):,.0f} {QUOTE}."
         if k["afwijking_groot"] else f"Binnen {DREMPEL:.0%} van het doel: niets doen."))
     wk = doel_week()
-    sv = schaduw(s, tk)
     bc = s["benchmark"]["coin"]
     print(f"  Weekbeeld (context): weekslot {wk['slot']:,.0f} {'boven' if wk['boven'] else 'onder'} het "
           f"{SMA_WEKEN}-wekengemiddelde {wk['sma']:,.0f}.")
-    print(f"  Schaduw (oude 30-wekenregel): {sv:,.2f} {QUOTE} = {sv / tk[bc]['bid']:.4f} {bc}")
+    for naam, sv in schaduwen(s, tk).items():
+        print(f"  Schaduw {naam}: {sv:,.2f} {QUOTE} = {sv / tk[bc]['bid']:.4f} {bc}")
     print(f"  Succescriterium: {CRITERIUM}")
     return k
 
@@ -383,7 +391,7 @@ def cmd_trade(s, tk, side, coin, amount, reason):
 def cmd_round(s, tk, note):
     if not note:
         raise SystemExit("Geef een analyse op")
-    schaduw_waarde = round(schaduw(s, tk, bijwerken=True), 2)
+    schaduw_waarde = {k: round(v, 2) for k, v in schaduwen(s, tk, bijwerken=True).items()}
     r = {"id": f"r{stamp()[:12]}", "time": now(), "value": round(value(s, tk), 2),
          "benchmark": round(bench(s, tk), 2), "cash": round(s["cash"], 2),
          "positions": {c: round(q * tk[c]["bid"], 2) for c, q in s["holdings"].items()}, "note": note,
@@ -412,8 +420,7 @@ def cmd_export(s, tk):
         "strategie": (lambda k: {"regel": f"kern {KERN:.0%} + trend {SMA_DAGEN} dagen", "sma": round(k["sma"], 2),
                                  "slot": round(k["slot"], 2), "boven": k["boven"], "doel_eth": k["doel"],
                                  "nu_eth": round(k["nu"], 3), "criterium": CRITERIUM})(kern_trend(s, tk)),
-        "schaduw": {"regel": s.get("schaduw", {}).get("regel"), "start": s.get("schaduw", {}).get("start"),
-                    "waarde": round(schaduw(s, tk), 2)},
+        "schaduwen": {k: round(v, 2) for k, v in schaduwen(s, tk).items()},
     }
     PUBLIC.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"docs/data.json geschreven (waarde {v:.2f} {QUOTE})")

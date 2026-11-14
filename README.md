@@ -14,10 +14,10 @@ Geen echt geld, geen echte trades, geen beleggingsadvies.
 - `archive/`: afgelopen spellen
 
 ## Strategie (vanaf 14 november 2026)
-- 50% blijft altijd ETH. De andere 50% staat in ETH zolang de dag boven het 50-dagengemiddelde sluit, anders in USDC.
-- Gekozen na backtests op 3 jaar dagdata (`research/`). Een schaduwportefeuille volgt ter vergelijking de oude
-  30-wekenregel.
-- Succescriterium, vooraf vastgelegd: op 14 mei 2027 meer dan 2 ETH waard én meer dan de schaduwportefeuille.
+- Alles in ETH zolang de dag boven het 50-dagengemiddelde sluit, anders alles in USDC (geen vaste kern).
+- Gekozen na backtests op 3 jaar dagdata (`research/`). Twee schaduwportefeuilles volgen ter vergelijking
+  kern 50% + 30 weken en kern 50% + 50 dagen.
+- Succescriterium, vooraf vastgelegd: op 14 mei 2027 meer dan 2 ETH waard én meer dan beide schaduwen.
 
 ## Spelregels (vanaf 10 november 2026)
 - Startkapitaal: 2 ETH. De 60/40-verdeling uit het korte euro-spel liep mee: 1,2 ETH en de rest in USDC.

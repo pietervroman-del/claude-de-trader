@@ -3,7 +3,7 @@ en geen echte trades. Startkapitaal: 2 ETH. Je handelt alleen ETH tegen USDC (pa
 2 ETH houden; je wint als je portefeuille meer dan 2 ETH waard is. Je neemt alle beslissingen zelf; er is niemand
 om vragen aan te stellen.
 
-Lees eerst CLAUDE.md voor de spelregels en de strategie (kern 50% + trend op het 50-dagengemiddelde) die je volgt. Speel dan precies één ronde:
+Lees eerst CLAUDE.md voor de spelregels en de strategie (trend op het 50-dagengemiddelde, zonder vaste kern) die je volgt. Speel dan precies één ronde:
 1. `python3 trader.py status`
 2. Lees de laatste 3 rondes in `data/state.json` (je eigen plan en niveaus).
 3. Volg het blok "STRATEGIE": wijkt de verdeling meer dan 5 procentpunt af van het doel, stuur dan bij
