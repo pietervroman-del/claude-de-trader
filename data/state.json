@@ -2,9 +2,9 @@
   "start_value": 4050.12,
   "quote": "USDC",
   "started": "2026-11-10T17:53:26Z",
-  "cash": 1620.536,
+  "cash": 1947.2240000000002,
   "holdings": {
-    "ETH": 1.2
+    "ETH": 1.0270954138112809
   },
   "benchmark": {
     "coin": "ETH",
@@ -33,6 +33,17 @@
       "eur": 1620.54,
       "fee": 0,
       "reason": "Overgenomen positie: 40% stond al in cash en staat nu in USDC."
+    },
+    {
+      "id": "t20261114080207ETH",
+      "time": "2026-11-14T08:02:07Z",
+      "side": "sell",
+      "coin": "ETH",
+      "qty": 0.17290458618871904,
+      "price": 1897.0,
+      "eur": 326.69,
+      "fee": 1.31,
+      "reason": "Kern + trend: weekslot 2.053 onder 30-wekengemiddelde 2.159, doel 50% ETH, stond op 58%"
     }
   ],
   "rounds": [
@@ -200,13 +211,18 @@
         "ETH": 2273.47
       },
       "note": "Ronde 15: Geen trades. Geen Archer-signaal A: de laatste weekcandle (05/11) is rood en winst/risico tot doel 1 is 2,7x (<3x), ook al staat ETH (1.894) in de koopzone 1.784-2.003. Plan voor de bestaande 1,2 ETH vastgelegd: stop 1.638, doel 1 3.158, doel 2 3.611; structuur pas kapot bij weekslot onder 1.506. Bij de volgende weeksluiting: koop bij toe een groene weekcandle in de zone met >=3x, anders niets doen."
+    },
+    {
+      "id": "r202611140802",
+      "time": "2026-11-14T08:02:12Z",
+      "value": 3895.62,
+      "benchmark": 3794.0,
+      "cash": 1947.22,
+      "positions": {
+        "ETH": 1948.4
+      },
+      "note": "Ronde 16: ETH-weekslot 2.053 (05/11) staat onder het 30-wekengemiddelde 2.159, dus doel 50% ETH. Verdeling stond op 58%, dus 328 USDC aan ETH verkocht (bied 1.897) naar 50/50; het oude Archer-plan is gewist. Volgende weeksluiting: sluit ETH boven 30-wekengemiddelde (~2.159) dan doel 100% ETH, anders blijft het 50/50 en doen we niets."
     }
   ],
-  "plan": {
-    "time": "2026-11-14T07:52:37Z",
-    "stop": 1638.0,
-    "doel1": 3158.0,
-    "doel2": 3611.0,
-    "reason": "Bestaande 1,2 ETH: stop onder 88,6% (1.638), doel 1 -0,27 (3.158), doel 2 -0,618 (3.611); structuur kapot bij weekslot onder 1.506"
-  }
+  "plan": null
 }
