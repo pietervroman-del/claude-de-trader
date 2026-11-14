@@ -222,7 +222,26 @@
         "ETH": 1948.4
       },
       "note": "Ronde 16: ETH-weekslot 2.053 (05/11) staat onder het 30-wekengemiddelde 2.159, dus doel 50% ETH. Verdeling stond op 58%, dus 328 USDC aan ETH verkocht (bied 1.897) naar 50/50; het oude Archer-plan is gewist. Volgende weeksluiting: sluit ETH boven 30-wekengemiddelde (~2.159) dan doel 100% ETH, anders blijft het 50/50 en doen we niets."
+    },
+    {
+      "id": "r202611140822",
+      "time": "2026-11-14T08:22:46Z",
+      "value": 3900.74,
+      "benchmark": 3803.96,
+      "cash": 1947.22,
+      "positions": {
+        "ETH": 1953.51
+      },
+      "note": "Ronde 17: Geen trades. Dagslot 13/11 was 1.927 tegenover het 50-dagengemiddelde 2.414, dus doel 50% ETH; de verdeling staat al op 50%, binnen de marge. Het doel slaat pas om naar 100% ETH als een dagcandle sluit boven het 50-dagengemiddelde (nu ~2.414, ruim 25% boven de koers van 1.902); tot dan blijft het 50/50 en doen we niets.",
+      "schaduw": 3900.74
     }
   ],
-  "plan": null
+  "plan": null,
+  "schaduw": {
+    "start": "2026-11-14T08:22:46Z",
+    "regel": "kern 50% + trend 30 weken",
+    "eth": 1.0270954138112809,
+    "cash": 1947.2240000000002,
+    "trades": 0
+  }
 }

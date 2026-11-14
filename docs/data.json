@@ -1,14 +1,14 @@
 {
  "start_eur": 4050.12,
  "started": "2026-11-10T17:53:26Z",
- "updated": "2026-11-14T08:02:12Z",
+ "updated": "2026-11-14T08:22:46Z",
  "fee": 0.004,
  "quote": "USDC",
  "start_qty": 2.0,
- "value_in_coin": 2.053571,
+ "value_in_coin": 2.050883,
  "cash": 1947.22,
- "value": 3895.62,
- "benchmark": 3794.0,
+ "value": 3900.74,
+ "benchmark": 3803.96,
  "benchmark_coin": "ETH",
  "tradable": [
   "ETH"
@@ -17,55 +17,55 @@
   {
    "coin": "ETH",
    "qty": 1.0270954138112809,
-   "price": 1897.0,
-   "eur": 1948.4
+   "price": 1901.98,
+   "eur": 1953.51
   }
  ],
  "market": [
   {
    "coin": "BTC",
-   "price": 67125.7,
-   "ch24": -1.63
+   "price": 67169.5,
+   "ch24": -1.56
   },
   {
    "coin": "ETH",
-   "price": 1897.77,
-   "ch24": -1.64
+   "price": 1901.73,
+   "ch24": -1.44
   },
   {
    "coin": "SOL",
-   "price": 75.18,
-   "ch24": -3.78
+   "price": 75.4,
+   "ch24": -3.49
   },
   {
    "coin": "XRP",
-   "price": 0.98169,
-   "ch24": -2.8
+   "price": 0.98501,
+   "ch24": -2.47
   },
   {
    "coin": "ADA",
-   "price": 0.162403,
-   "ch24": -3.54
+   "price": 0.163108,
+   "ch24": -3.12
   },
   {
    "coin": "DOGE",
-   "price": 0.062553,
-   "ch24": -2.96
+   "price": 0.0627606,
+   "ch24": -2.64
   },
   {
    "coin": "LINK",
-   "price": 9.57622,
-   "ch24": -2.74
+   "price": 9.5748,
+   "ch24": -2.76
   },
   {
    "coin": "AVAX",
-   "price": 8.002,
-   "ch24": -2.72
+   "price": 8.042,
+   "ch24": -2.24
   },
   {
    "coin": "DOT",
-   "price": 0.7816,
-   "ch24": -4.39
+   "price": 0.7839,
+   "ch24": -4.11
   }
  ],
  "trades": [
@@ -279,6 +279,18 @@
     "ETH": 1948.4
    },
    "note": "Ronde 16: ETH-weekslot 2.053 (05/11) staat onder het 30-wekengemiddelde 2.159, dus doel 50% ETH. Verdeling stond op 58%, dus 328 USDC aan ETH verkocht (bied 1.897) naar 50/50; het oude Archer-plan is gewist. Volgende weeksluiting: sluit ETH boven 30-wekengemiddelde (~2.159) dan doel 100% ETH, anders blijft het 50/50 en doen we niets."
+  },
+  {
+   "id": "r202611140822",
+   "time": "2026-11-14T08:22:46Z",
+   "value": 3900.74,
+   "benchmark": 3803.96,
+   "cash": 1947.22,
+   "positions": {
+    "ETH": 1953.51
+   },
+   "note": "Ronde 17: Geen trades. Dagslot 13/11 was 1.927 tegenover het 50-dagengemiddelde 2.414, dus doel 50% ETH; de verdeling staat al op 50%, binnen de marge. Het doel slaat pas om naar 100% ETH als een dagcandle sluit boven het 50-dagengemiddelde (nu ~2.414, ruim 25% boven de koers van 1.902); tot dan blijft het 50/50 en doen we niets.",
+   "schaduw": 3900.74
   }
  ],
  "plan": null,
@@ -302,10 +314,17 @@
   "lagere_top": 2806.69
  },
  "strategie": {
-  "sma30w": 2159.26,
-  "weekslot": 2053.48,
+  "regel": "kern 50% + trend 50 dagen",
+  "sma": 2413.71,
+  "slot": 1927.29,
   "boven": false,
   "doel_eth": 0.5,
-  "nu_eth": 0.5
+  "nu_eth": 0.501,
+  "criterium": "Op 14 mei 2027 is de portefeuille meer dan 2 ETH waard én meer dan de schaduwportefeuille met de oude 30-wekenregel."
+ },
+ "schaduw": {
+  "regel": "kern 50% + trend 30 weken",
+  "start": "2026-11-14T08:22:46Z",
+  "waarde": 3900.74
  }
 }
