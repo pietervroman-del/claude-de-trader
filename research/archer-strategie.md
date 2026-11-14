@@ -33,3 +33,19 @@ Toppen en bodems via zigzag (een top of bodem telt na X% terugkeer). Start in ca
 (2016-17, 2020-21) volledig, maar beperkt ze de schade in dalende jaren (sinds 2022). Met 2 tot 8 trades in
 11 jaar valt er statistisch niets uit te besluiten, en de uitkomst hangt sterk af van de gekozen instellingen.
 Hun eigen, niet-mechanische beoordeling kan uiteraard anders uitvallen dan deze code.
+
+## Hybride varianten (`hybride_backtest.py`, 14 nov 2026)
+Instellingen vooraf gekozen (kern 50%, 30-wekengemiddelde, zigzag 25%, risico 2% per trade) en daarna op buren getest.
+Eindwaarde tegenover gewoon ETH houden (1,00 = gelijk):
+
+| variant | 2017-2020 | 2021-nu | 2017-nu |
+|---|---|---|---|
+| Archer puur | 0,01 | 0,47 | 0,01 |
+| kern 50% + Archer-timing | 0,22 | 0,92 | 0,20 |
+| trend: 100% of 0% ETH rond het 30-wekengemiddelde | 1,29 | 1,80 | 2,17 |
+| **kern 50% + trend (30w), enkel bijsturen bij omslag** | **1,51** | **1,56** | **2,21** |
+
+Robuustheid (2017-nu): kern+trend gaf 3,31 / 2,21 / 1,00 met een gemiddelde van 20 / 30 / 40 weken; puur trend
+4,52 / 2,17 / 0,65. De kern maakt het resultaat dus minder afhankelijk van de instelling. Ongeveer 3 transacties per jaar.
+Grootste daling blijft hoog (75-88%): de kern zit mee in elke crash. Eén munt, 10 jaar: geen garantie voor de toekomst.
+**Gekozen voor de bot: kern 50% + trend op het 30-wekengemiddelde.**

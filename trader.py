@@ -168,6 +168,37 @@ def archer(pair):
             "signaal_B": H2 < H1 and green and last["c"] > H2}
 
 
+# --- Hoofdstrategie sinds 14 nov 2026: kern + trend (research/hybride_backtest.py) ---
+KERN = 0.5     # dit deel blijft altijd ETH
+SMA_WEKEN = 30
+
+
+def kern_trend(s, tk):
+    """Doelverdeling: 100% ETH als de laatste gesloten week boven het 30-wekengemiddelde sloot, anders 50%."""
+    c = TRADABLE[0]
+    w = week_candles(PAIRS[c])
+    sma = sum(x["c"] for x in w[-SMA_WEKEN:]) / SMA_WEKEN
+    boven = w[-1]["c"] > sma
+    doel = 1.0 if boven else KERN
+    px = tk[c]["last"]
+    v = value(s, tk)
+    nu = s["holdings"].get(c, 0.0) * tk[c]["bid"] / v
+    actie = (doel - nu) * v   # >0: voor zoveel USDC ETH kopen, <0: voor zoveel ETH verkopen
+    return {"week": w[-1]["t"], "slot": w[-1]["c"], "sma": sma, "boven": boven, "doel": doel, "nu": nu,
+            "actie": actie, "prijs": px, "afwijking_groot": abs(doel - nu) > 0.05}
+
+
+def print_kern_trend(s, tk):
+    k = kern_trend(s, tk)
+    print(f"\nSTRATEGIE kern + trend (hoofdregel):")
+    print(f"  Laatste gesloten week ({k['week']:%d/%m}): slot {k['slot']:,.0f} tegenover 30-wekengemiddelde {k['sma']:,.0f}"
+          f" -> {'BOVEN' if k['boven'] else 'ONDER'} -> doel {k['doel']:.0%} ETH")
+    print(f"  Nu {k['nu']:.0%} ETH. " + (
+        f"Bijsturen: {'koop' if k['actie'] > 0 else 'verkoop'} ETH voor ~{abs(k['actie']):,.0f} {QUOTE}."
+        if k["afwijking_groot"] else "Binnen 5% van het doel: niets doen."))
+    return k
+
+
 def archer_summary():
     a = archer(PAIRS[TRADABLE[0]])
     r = lambda x: round(x, 2)
@@ -241,6 +272,7 @@ def cmd_status(s, tk):
         print(f"  30d: {w['ch30']:+.1f}%, bereik {w['low30']:,.0f} - {w['high30']:,.0f}")
         print(f"  SMA7 {w['sma7']:,.0f} ({(t['last']/w['sma7']-1)*100:+.1f}%), "
               f"SMA30 {w['sma30']:,.0f} ({(t['last']/w['sma30']-1)*100:+.1f}%), RSI14 {w['rsi14']:.0f}")
+        print_kern_trend(s, tk)
         print_archer(c, tk)
     plan = s.get("plan")
     if plan:
@@ -322,6 +354,8 @@ def cmd_export(s, tk):
                    for c in PAIRS],
         "trades": s["trades"], "rounds": s["rounds"], "plan": s.get("plan"),
         "archer": archer_summary(),
+        "strategie": (lambda k: {"sma30w": round(k["sma"], 2), "weekslot": round(k["slot"], 2), "boven": k["boven"],
+                                 "doel_eth": k["doel"], "nu_eth": round(k["nu"], 3)})(kern_trend(s, tk)),
     }
     PUBLIC.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"docs/data.json geschreven (waarde {v:.2f} {QUOTE})")
