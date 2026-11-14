@@ -1,14 +1,14 @@
 {
  "start_eur": 4050.12,
  "started": "2026-11-10T17:53:26Z",
- "updated": "2026-11-14T08:37:52Z",
+ "updated": "2026-11-14T08:38:18Z",
  "fee": 0.004,
  "quote": "USDC",
  "start_qty": 2.0,
- "value_in_coin": 2.049582,
+ "value_in_coin": 2.049344,
  "cash": 3887.42,
  "value": 3887.42,
- "benchmark": 3793.38,
+ "benchmark": 3793.82,
  "benchmark_coin": "ETH",
  "tradable": [
   "ETH"
@@ -17,27 +17,27 @@
  "market": [
   {
    "coin": "BTC",
-   "price": 67018.5,
+   "price": 67017.7,
    "ch24": -1.79
   },
   {
    "coin": "ETH",
-   "price": 1896.4,
-   "ch24": -1.72
+   "price": 1896.7,
+   "ch24": -1.7
   },
   {
    "coin": "SOL",
-   "price": 75.2,
-   "ch24": -3.75
+   "price": 75.19,
+   "ch24": -3.76
   },
   {
    "coin": "XRP",
-   "price": 0.98235,
-   "ch24": -2.74
+   "price": 0.9825,
+   "ch24": -2.72
   },
   {
    "coin": "ADA",
-   "price": 0.162596,
+   "price": 0.162591,
    "ch24": -3.43
   },
   {
@@ -47,13 +47,13 @@
   },
   {
    "coin": "LINK",
-   "price": 9.55859,
-   "ch24": -2.92
+   "price": 9.55319,
+   "ch24": -2.98
   },
   {
    "coin": "AVAX",
-   "price": 8.013,
-   "ch24": -2.59
+   "price": 8.011,
+   "ch24": -2.61
   },
   {
    "coin": "DOT",
@@ -340,7 +340,7 @@
   "criterium": "Op 14 mei 2027 is de portefeuille meer dan 2 ETH waard én meer dan beide schaduwportefeuilles (kern 50% + 30 weken, en kern 50% + 50 dagen)."
  },
  "schaduwen": {
-  "kern 50% + trend 30 weken": 3895.31,
-  "kern 50% + trend 50 dagen": 3879.29
+  "kern 50% + trend 30 weken": 3895.53,
+  "kern 50% + trend 50 dagen": 3895.53
  }
 }
