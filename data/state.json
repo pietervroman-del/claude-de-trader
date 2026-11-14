@@ -282,6 +282,19 @@
         "kern 50% + trend 30 weken": 3888.87,
         "kern 50% + trend 50 dagen": 3888.87
       }
+    },
+    {
+      "id": "r202611141701",
+      "time": "2026-11-14T17:01:11Z",
+      "value": 3887.42,
+      "benchmark": 3635.72,
+      "cash": 3887.42,
+      "positions": {},
+      "note": "Ronde 21: Geen trades. Dagslot 13/11 was 1.927 onder het 50-dagengemiddelde 2.414, dus doel 0% ETH; we staan al volledig in USDC (ETH nu ~1.817, portefeuille 2.139 ETH). Het doel slaat pas om naar 100% ETH als een dagcandle sluit boven het 50-dagengemiddelde (nu ~2.414, ruim 32% boven de koers); tot dan doen we niets.",
+      "schaduw": {
+        "kern 50% + trend 30 weken": 3814.34,
+        "kern 50% + trend 50 dagen": 3814.34
+      }
     }
   ],
   "plan": null,
