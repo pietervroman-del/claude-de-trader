@@ -1,14 +1,14 @@
 {
  "start_eur": 4050.12,
  "started": "2026-11-10T17:53:26Z",
- "updated": "2026-11-14T06:30:58Z",
+ "updated": "2026-11-14T07:52:37Z",
  "fee": 0.004,
  "quote": "USDC",
  "start_qty": 2.0,
- "value_in_coin": 2.050416,
+ "value_in_coin": 2.055363,
  "cash": 1620.54,
- "value": 3907.23,
- "benchmark": 3811.16,
+ "value": 3894.01,
+ "benchmark": 3789.12,
  "benchmark_coin": "ETH",
  "tradable": [
   "ETH"
@@ -17,55 +17,55 @@
   {
    "coin": "ETH",
    "qty": 1.2,
-   "price": 1905.58,
-   "eur": 2286.7
+   "price": 1894.56,
+   "eur": 2273.47
   }
  ],
  "market": [
   {
    "coin": "BTC",
-   "price": 67300.3,
-   "ch24": -1.37
+   "price": 67019.5,
+   "ch24": -1.78
   },
   {
    "coin": "ETH",
-   "price": 1905.69,
-   "ch24": -1.23
+   "price": 1894.4,
+   "ch24": -1.82
   },
   {
    "coin": "SOL",
-   "price": 75.63,
-   "ch24": -3.2
+   "price": 75.17,
+   "ch24": -3.79
   },
   {
    "coin": "XRP",
-   "price": 0.99603,
-   "ch24": -1.38
+   "price": 0.9821,
+   "ch24": -2.76
   },
   {
    "coin": "ADA",
-   "price": 0.164717,
-   "ch24": -2.17
+   "price": 0.162462,
+   "ch24": -3.51
   },
   {
    "coin": "DOGE",
-   "price": 0.0631927,
-   "ch24": -1.97
+   "price": 0.0625013,
+   "ch24": -3.04
   },
   {
    "coin": "LINK",
-   "price": 9.69562,
-   "ch24": -1.53
+   "price": 9.54795,
+   "ch24": -3.03
   },
   {
    "coin": "AVAX",
-   "price": 8.131,
-   "ch24": -1.15
+   "price": 8.001,
+   "ch24": -2.74
   },
   {
    "coin": "DOT",
-   "price": 0.7967,
-   "ch24": -2.54
+   "price": 0.7829,
+   "ch24": -4.23
   }
  ],
  "trades": [
@@ -246,6 +246,43 @@
     "ETH": 2286.7
    },
    "note": "Ronde 14: Geen trades. ETH 1.906 zakt richting de 30d-bodem van 1.875 (15,8% onder SMA30 2.264, SMA7 2.030, RSI 27 oververkocht); verkopen in oververkocht gebied na -15% in 7 dagen is slechte timing. Plan: sluit ETH op dagbasis onder 1.875 dan een vijfde van de ETH naar USDC; herstel boven 2.050 en SMA7 (~2.030) betekent USDC terug inzetten tot ca. 80% ETH. Fees van 0,4% maken schuiven zonder signaal nadelig."
+  },
+  {
+   "id": "r202611140752",
+   "time": "2026-11-14T07:52:37Z",
+   "value": 3894.01,
+   "benchmark": 3789.12,
+   "cash": 1620.54,
+   "positions": {
+    "ETH": 2273.47
+   },
+   "note": "Ronde 15: Geen trades. Geen Archer-signaal A: de laatste weekcandle (05/11) is rood en winst/risico tot doel 1 is 2,7x (<3x), ook al staat ETH (1.894) in de koopzone 1.784-2.003. Plan voor de bestaande 1,2 ETH vastgelegd: stop 1.638, doel 1 3.158, doel 2 3.611; structuur pas kapot bij weekslot onder 1.506. Bij de volgende weeksluiting: koop bij toe een groene weekcandle in de zone met >=3x, anders niets doen."
   }
- ]
+ ],
+ "plan": {
+  "time": "2026-11-14T07:52:37Z",
+  "stop": 1638.0,
+  "doel1": 3158.0,
+  "doel2": 3611.0,
+  "reason": "Bestaande 1,2 ETH: stop onder 88,6% (1.638), doel 1 -0,27 (3.158), doel 2 -0,618 (3.611); structuur kapot bij weekslot onder 1.506"
+ },
+ "archer": {
+  "structuur": "gemengd (hogere top, lagere bodem)",
+  "impuls": [
+   1505.75,
+   2806.69
+  ],
+  "zone": [
+   1784.15,
+   2002.71
+  ],
+  "stop": 1637.52,
+  "doel1": 3157.94,
+  "doel2": 3610.67,
+  "laatste_week": "rood",
+  "in_zone": true,
+  "signaal_A": false,
+  "signaal_B": false,
+  "lagere_top": 2806.69
+ }
 }
