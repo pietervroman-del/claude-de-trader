@@ -49,3 +49,18 @@ Robuustheid (2017-nu): kern+trend gaf 3,31 / 2,21 / 1,00 met een gemiddelde van 
 4,52 / 2,17 / 0,65. De kern maakt het resultaat dus minder afhankelijk van de instelling. Ongeveer 3 transacties per jaar.
 Grootste daling blijft hoog (75-88%): de kern zit mee in elke crash. Eén munt, 10 jaar: geen garantie voor de toekomst.
 **Gekozen voor de bot: kern 50% + trend op het 30-wekengemiddelde.**
+
+## Slimmere kern getest (14 nov 2026)
+Eindwaarde tegenover houden, 30-wekengemiddelde (tussen haakjes: 20 / 40 weken), periode 2017-nu:
+
+| kern | 2017-2020 | 2021-nu | 2017-nu |
+|---|---|---|---|
+| **vast 50%** | 1,51 | 1,56 | **2,21** (3,31 / 1,00) |
+| A: 25% in bearmarkt (onder gemiddelde + dalende structuur) | 1,60 | 1,24 | 1,85 (3,19 / 0,93) |
+| B: 0% in bearmarkt | 1,66 | 0,96 | 1,48 (3,01 / 0,65) |
+| C: 25% als het gemiddelde zelf daalt | 1,39 | 1,51 | 1,97 (3,67 / 0,95) |
+| D: 75% bij diepe korting (>30% onder gemiddelde) | 1,27 | 1,97 | 2,34 (2,75 / 1,05) |
+
+Geen enkele variant is in beide helften én bij alle instellingen beter dan de vaste kern; de grootste daling wordt
+nergens wezenlijk kleiner. De bevestiging van een bearmarkt komt te laat: verkopen gebeurt dan dicht bij de bodem.
+Met vijf geteste varianten is een toevallige winnaar ook waarschijnlijk. **Besluit: vaste kern van 50% blijft.**
