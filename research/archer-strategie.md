@@ -80,3 +80,21 @@ ETH: begin 2021 ~1.212, begin 2022 ~3.539, begin 2024 ~2.210, nu ~2.053 USD.
 **Lezing:** de voorsprong sinds 2021 komt bijna volledig uit 2022 (de crash ontwijken). Sinds 2024, een markt
 die op en neer gaat zonder duidelijke trend, doet geen enkele variant betrouwbaar beter dan gewoon houden;
 trendfilters verkopen en kopen dan telkens te laat terug.
+
+## Swing-strategieën op dagcandles, laatste 3 jaar (`swing_backtest.py`, 14 nov 2026)
+Binance ETH/USDT-dagdata, 14 nov 2023 - nu (ETH tussen 1.385 en 4.957), helften gesplitst op 14 mei 2025.
+In ETH tegenover houden (1,00 = gelijk), kern 50%, fee 0,4%:
+
+| regel | 3 jaar | helft 1 | helft 2 | trades/maand |
+|---|---|---|---|---|
+| RSI 70/30 (verkoop na stijging, koop na daling) | 0,72 | 0,88 | 0,82 | 0,7 |
+| Bollinger 2,0 | 0,69 | 0,72 | 0,91 | 0,6 |
+| herbalanceren 70% ETH ±10 pp | 1,12 | 0,96 | 1,18 | 0,1 |
+| **trend: tactisch deel boven het 50-dagengemiddelde** | **1,91** | **1,22** | **1,57** | **1,2** |
+| Donchian: kopen boven 40-dagentop, verkopen onder 20-dagenbodem | 1,89 | 1,33 | 1,42 | 0,4 |
+| huidige bot (30 weken ~ 210 dagen) | 1,15 | 0,96 | 1,19 | 0,5 |
+
+Buren: trend 40/50/60/75 dagen gaven 1,97 / 1,91 / 1,72 / 1,38, in elke helft boven 1. Met 1,2% kosten per
+transactie nog 1,60. Terugkopen-na-daling werkte in deze periode niet; trendvolgen op de daggrafiek wel.
+Kanttekeningen: ETH maakte in deze 3 jaar grote trends (bijna x3,6 tussen bodem en top), ~40 trades in totaal, en
+dit is de derde zoekronde: een forward-test op papier blijft nodig.
