@@ -2,10 +2,8 @@
   "start_value": 4050.12,
   "quote": "USDC",
   "started": "2026-11-10T17:53:26Z",
-  "cash": 1947.2240000000002,
-  "holdings": {
-    "ETH": 1.0270954138112809
-  },
+  "cash": 3887.4212051871373,
+  "holdings": {},
   "benchmark": {
     "coin": "ETH",
     "qty": 2.0,
@@ -44,6 +42,17 @@
       "eur": 326.69,
       "fee": 1.31,
       "reason": "Kern + trend: weekslot 2.053 onder 30-wekengemiddelde 2.159, doel 50% ETH, stond op 58%"
+    },
+    {
+      "id": "t20261114083750ETH",
+      "time": "2026-11-14T08:37:50Z",
+      "side": "sell",
+      "coin": "ETH",
+      "qty": 1.0270954138112809,
+      "price": 1896.6,
+      "eur": 1940.2,
+      "fee": 7.76,
+      "reason": "Dagslot 13/11 1.927 onder 50-daggemiddelde 2.414: doel 0% ETH"
     }
   ],
   "rounds": [
@@ -234,14 +243,34 @@
       },
       "note": "Ronde 17: Geen trades. Dagslot 13/11 was 1.927 tegenover het 50-dagengemiddelde 2.414, dus doel 50% ETH; de verdeling staat al op 50%, binnen de marge. Het doel slaat pas om naar 100% ETH als een dagcandle sluit boven het 50-dagengemiddelde (nu ~2.414, ruim 25% boven de koers van 1.902); tot dan blijft het 50/50 en doen we niets.",
       "schaduw": 3900.74
+    },
+    {
+      "id": "r202611140837",
+      "time": "2026-11-14T08:37:52Z",
+      "value": 3887.42,
+      "benchmark": 3793.38,
+      "cash": 3887.42,
+      "positions": {},
+      "note": "Ronde 18: Dagslot 13/11 was 1.927 onder het 50-dagengemiddelde 2.414, dus doel 0% ETH; alle ETH verkocht aan 1.896,6 (verdeling stond op 50%). Het doel slaat pas om naar 100% ETH als een dagcandle sluit boven het 50-dagengemiddelde (nu ~2.414); tot dan blijft alles in USDC en doen we niets.",
+      "schaduw": {
+        "kern 50% + trend 30 weken": 3895.31,
+        "kern 50% + trend 50 dagen": 3879.29
+      }
     }
   ],
   "plan": null,
-  "schaduw": {
-    "start": "2026-11-14T08:22:46Z",
-    "regel": "kern 50% + trend 30 weken",
-    "eth": 1.0270954138112809,
-    "cash": 1947.2240000000002,
-    "trades": 0
+  "schaduwen": {
+    "kern 50% + trend 30 weken": {
+      "start": "2026-11-14T08:22:46Z",
+      "eth": 1.0270954138112809,
+      "cash": 1947.2240000000002,
+      "trades": 0
+    },
+    "kern 50% + trend 50 dagen": {
+      "start": "2026-11-14T08:37:52Z",
+      "eth": 1.0205033948589353,
+      "cash": 1943.7106025935686,
+      "trades": 1
+    }
   }
 }
