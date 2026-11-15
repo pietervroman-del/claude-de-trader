@@ -128,3 +128,14 @@ Getest met vooraf gekozen waarden, ook op nooit gebruikte data. Eindwaarde tegen
 bevestiging dan de eerdere tests. De filters halveren het aantal trades en verhogen het percentage winnende trades,
 maar zijn niet consequent beter: winst in de ene reeks, verlies in de andere. De verliezers zijn op het moment van
 instappen niet te onderscheiden van het begin van een echte trend; ze zijn de prijs voor het meepakken van trends.
+
+### Buffer in de EUR 1.000-simulatie (ETH/EUR, 15 nov 2023 - nu, houden = EUR 846)
+| buffer | eindwaarde | aankopen (winstgevend) | slechtste achterstand op houden |
+|---|---|---|---|
+| 0% (bot) | EUR 2.981 | 23 (7) | 23% |
+| 1% | EUR 2.460 | 18 (7) | 35% |
+| 2% | EUR 1.959 | 15 (6) | 35% |
+| 3% | EUR 1.858 | 14 (6) | 34% |
+Op nieuwe data: ETH 2018-nov 2023 juist veel beter met buffer (2,83 -> 5,39 bij 2%), BTC gemengd. De buffer kocht
+in mei 2025 pas terug op 1.963 in plaats van 1.610-1.627 en miste zo het begin van het herstel. Geen consequente
+verbetering: de bot blijft zonder buffer.
