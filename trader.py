@@ -189,7 +189,28 @@ def day_candles(pair):
             rows = next(v for k, v in res.items() if k != "last")[:-1]
         except OSError:
             rows = snapshot()["day_ohlc"]
-    return [{"t": datetime.fromtimestamp(r[0], timezone.utc), "c": float(r[4])} for r in rows]
+    return [{"t": datetime.fromtimestamp(r[0], timezone.utc), "o": float(r[1]), "h": float(r[2]),
+             "l": float(r[3]), "c": float(r[4])} for r in rows]
+
+
+def grafiekdata(dagen=365):
+    """Dagcandles met het 50-dagengemiddelde en het 30-wekengemiddelde, voor de koersgrafiek op het dashboard."""
+    pair = PAIRS[TRADABLE[0]]
+    d = day_candles(pair)
+    w = week_candles(pair)
+    cl = [x["c"] for x in d]
+    rows = []
+    for i in range(max(0, len(d) - dagen), len(d)):
+        sma = round(sum(cl[i - SMA_DAGEN + 1:i + 1]) / SMA_DAGEN, 2) if i >= SMA_DAGEN - 1 else None
+        x = d[i]
+        rows.append([int(x["t"].timestamp()), x["o"], x["h"], x["l"], x["c"], sma])
+    wk = []
+    for i in range(SMA_WEKEN - 1, len(w)):
+        if w[i]["t"].timestamp() >= rows[0][0] - 7 * 86400:
+            # het weekgemiddelde geldt vanaf de sluiting van die week (start + 7 dagen)
+            wk.append([int(w[i]["t"].timestamp()) + 7 * 86400,
+                       round(sum(x["c"] for x in w[i - SMA_WEKEN + 1:i + 1]) / SMA_WEKEN, 2)])
+    return {"dagen": rows, "sma_dagen": SMA_DAGEN, "sma_weken": SMA_WEKEN, "week_sma": wk}
 
 
 def doel_dag():
@@ -421,6 +442,7 @@ def cmd_export(s, tk):
                                  "slot": round(k["slot"], 2), "boven": k["boven"], "doel_eth": k["doel"],
                                  "nu_eth": round(k["nu"], 3), "criterium": CRITERIUM})(kern_trend(s, tk)),
         "schaduwen": {k: round(v, 2) for k, v in schaduwen(s, tk).items()},
+        "grafiek": grafiekdata(),
     }
     PUBLIC.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"docs/data.json geschreven (waarde {v:.2f} {QUOTE})")

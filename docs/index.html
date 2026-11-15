@@ -49,6 +49,16 @@ header p{margin:6px 0 0;color:var(--muted);max-width:60ch}
 .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:8px}
 .legend span::before{content:"";display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:7px;vertical-align:middle;background:currentColor}
 .legend .a{color:var(--accent)} .legend .b{color:var(--bench)}
+.candles-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:10px}
+.candles-head h2{margin:0}
+.range{display:flex;gap:4px}
+.range button{font:500 12px var(--mono);color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:6px;padding:4px 9px;cursor:pointer}
+.range button[aria-pressed="true"]{color:var(--ink);border-color:var(--accent);background:var(--soft)}
+.range button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#candles{height:400px;width:100%}
+@media (max-width:600px){#candles{height:300px}}
+.legend .up::before{background:var(--up)} .legend .dn{color:var(--down)}
+.candle-note{margin:8px 0 0;color:var(--muted);font-size:13px;max-width:75ch}
 .legend em{font-style:normal;color:var(--muted)}
 .cols{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:22px;align-items:start}
 @media (max-width:820px){.cols{grid-template-columns:1fr}.score>div{border-left:0;padding-left:0;padding-block:8px}}
@@ -97,6 +107,20 @@ footer{color:var(--muted);font-size:12.5px}
     </div>
   </section>
 
+  <section class="panel" id="candlePanel" hidden>
+    <div class="candles-head">
+      <h2>ETH/USD dagcandles · waar de bot op beslist</h2>
+      <div class="range" role="group" aria-label="Periode">
+        <button type="button" data-d="90" id="r90">3M</button>
+        <button type="button" data-d="180" id="r180" aria-pressed="true">6M</button>
+        <button type="button" data-d="365" id="r365">1J</button>
+      </div>
+    </div>
+    <div id="candles"></div>
+    <div class="legend"><span class="a" id="lg50">50-dagengemiddelde (hoofdregel)</span><span class="b" id="lg30">30-wekengemiddelde (schaduw)</span><span class="up">▲ koop</span><span class="dn">▼ verkoop</span></div>
+    <p class="candle-note" id="candleNote"></p>
+  </section>
+
   <section class="panel chart">
     <h2>Verloop per ronde</h2>
     <div id="chart"><p class="empty">De grafiek verschijnt zodra de eerste ronde gelogd is.</p></div>
@@ -142,6 +166,7 @@ footer{color:var(--muted);font-size:12.5px}
   <footer id="foot">Kort ETH-spel in euro (10 nov 2026, €1000, 2 rondes): <a href="https://github.com/pietervroman-del/claude-de-trader/tree/main/archive/2026-11-eth-1000eur" style="color:var(--accent)">archief</a>.<br>Eerste spel (17 okt – 10 nov 2026, €500, vrije muntkeuze): Claude eindigde op €487,38, BTC kopen en houden op €458,21: <a href="https://github.com/pietervroman-del/claude-de-trader/tree/main/archive/2026-10-btc-500" style="color:var(--accent)">archief</a>.<br>Geen echt geld, geen beleggingsadvies. Puur een experiment. Code en volledige historiek op <a href="https://github.com/pietervroman-del/claude-de-trader" style="color:var(--accent)">GitHub</a>.</footer>
 </div>
 
+<script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 <script>
 const COLORS={BTC:"#e8912d",ETH:"#6274e0",SOL:"#9b5de5",XRP:"#3a8fb7",ADA:"#2f6fd6",DOGE:"#c9a227",LINK:"#2a5ada",AVAX:"#d64545",DOT:"#d63c8a",CASH:"var(--line)"};
 const pct=n=>(n>=0?"+":"")+n.toLocaleString("nl-BE",{minimumFractionDigits:2,maximumFractionDigits:2})+"%";
@@ -230,7 +255,48 @@ function render(s){
     }).join("");
   }
   drawChart(s);
+  drawCandles(s);
 }
+
+let LW=null, LWs={}, LWrange=180, LWlast=0;
+function drawCandles(s){
+  const g=s.grafiek;
+  if(!g||!g.dagen?.length||!window.LightweightCharts) return;
+  el("candlePanel").hidden=false;
+  const css=getComputedStyle(document.documentElement), v=n=>css.getPropertyValue(n).trim();
+  if(!LW){
+    LW=LightweightCharts.createChart(el("candles"),{autoSize:true,
+      layout:{background:{color:v("--surface")},textColor:v("--muted"),fontFamily:"IBM Plex Mono, monospace",fontSize:11},
+      grid:{vertLines:{color:v("--line")},horzLines:{color:v("--line")}},
+      rightPriceScale:{borderColor:v("--line")},timeScale:{borderColor:v("--line"),rightOffset:4},
+      crosshair:{mode:0},localization:{locale:"nl-BE",priceFormatter:p=>Math.round(p).toLocaleString("nl-BE")}});
+    LWs.c=LW.addCandlestickSeries({upColor:v("--up"),downColor:v("--down"),borderVisible:false,
+      wickUpColor:v("--up"),wickDownColor:v("--down"),priceLineVisible:true});
+    LWs.s50=LW.addLineSeries({color:v("--accent"),lineWidth:2,priceLineVisible:false,lastValueVisible:true,crosshairMarkerVisible:false});
+    LWs.s30=LW.addLineSeries({color:v("--bench"),lineWidth:2,lineType:1,priceLineVisible:false,lastValueVisible:true,crosshairMarkerVisible:false});
+    document.querySelectorAll(".range button").forEach(b=>b.addEventListener("click",()=>{
+      LWrange=+b.dataset.d; document.querySelectorAll(".range button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+      setRange();
+    }));
+  }
+  LWs.c.setData(g.dagen.map(r=>({time:r[0],open:r[1],high:r[2],low:r[3],close:r[4]})));
+  LWs.s50.setData(g.dagen.filter(r=>r[5]!=null).map(r=>({time:r[0],value:r[5]})));
+  LWs.s30.setData(g.week_sma.map(([t,val])=>({time:t,value:val})));
+  el("lg50").textContent=`${g.sma_dagen}-dagengemiddelde (hoofdregel)`;
+  el("lg30").textContent=`${g.sma_weken}-wekengemiddelde (schaduw)`;
+  const first=g.dagen[0][0], day=t=>Math.floor(Date.parse(t)/864e5)*86400;
+  const mk=(s.trades||[]).filter(t=>t.fee>0&&day(t.time)>=first).sort((a,b)=>a.time<b.time?-1:1).map(t=>({
+    time:Math.min(day(t.time),g.dagen.at(-1)[0]),position:t.side==="buy"?"belowBar":"aboveBar",
+    color:t.side==="buy"?v("--up"):v("--down"),shape:t.side==="buy"?"arrowUp":"arrowDown",
+    text:(t.side==="buy"?"koop ":"verkoop ")+Math.round(t.price).toLocaleString("nl-BE")}));
+  LWs.c.setMarkers(mk);
+  LWlast=g.dagen.at(-1)[0];
+  setRange();
+  const last=g.dagen.at(-1), sma=last[5], gap=(sma/last[4]-1)*100;
+  el("candleNote").textContent=`Laatste gesloten dag: slot ${Math.round(last[4]).toLocaleString("nl-BE")} tegenover het ${g.sma_dagen}-dagengemiddelde ${Math.round(sma).toLocaleString("nl-BE")}. `+
+    (last[4]>sma?`ETH sluit erboven: doel 100% ETH.`:`ETH sluit eronder: doel 0% ETH. Terug naar ETH na een dagslot boven ${Math.round(sma).toLocaleString("nl-BE")} (${gap.toFixed(1).replace(".",",")}% boven het slot).`);
+}
+function setRange(){ if(LW&&LWlast) LW.timeScale().setVisibleRange({from:LWlast-LWrange*86400,to:LWlast+3*86400}); }
 
 function drawChart(s){
   // In een spel in USDC tekenen we alles in ETH: de benchmark is dan een vlakke lijn op het startaantal.
