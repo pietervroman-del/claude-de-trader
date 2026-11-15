@@ -98,3 +98,16 @@ Buren: trend 40/50/60/75 dagen gaven 1,97 / 1,91 / 1,72 / 1,38, in elke helft bo
 transactie nog 1,60. Terugkopen-na-daling werkte in deze periode niet; trendvolgen op de daggrafiek wel.
 Kanttekeningen: ETH maakte in deze 3 jaar grote trends (bijna x3,6 tussen bodem en top), ~40 trades in totaal, en
 dit is de derde zoekronde: een forward-test op papier blijft nodig.
+
+## Huidige botregel nagespeeld vanaf 15 nov 2023 met EUR 1.000 (`replay_3jaar.py`)
+ETH/EUR-dagdata (Binance), cash in euro, 0,4% fee. ETH ging van 1.900 naar 1.608 EUR.
+
+| | eindwaarde | transacties | grootste daling | slechtste achterstand op houden |
+|---|---|---|---|---|
+| gewoon houden | EUR 846 | 1 | - | - |
+| **regel, kern 0% (bot)** | **EUR 2.981** | 46 | 35% | 23% (24 jul 2024: 1.244 vs 1.621) |
+| regel, kern 50% | EUR 1.723 | 57 | 50% | 12% |
+
+Van de 23 rondes (kopen + verkopen) waren er maar 7 winstgevend: veel kleine verliezen door valse signalen, en
+vier grote winsten (feb-apr 2024, mei-jun 2025, jul-sep 2025, jul-okt 2026). **Let op:** de regel is gekozen op
+dezelfde 3 jaar data; dit resultaat is daardoor optimistisch en geen verwachting voor de toekomst.
