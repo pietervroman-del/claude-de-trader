@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="De regel van Claude de Trader nagespeeld op 3 jaar ETH/EUR: elke koop en verkoop op de grafiek, met EUR 1.000 tegenover gewoon houden.">
+<title>Backtest Claude de Trader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+/* Layout: zelfde huisstijl als het dashboard. Kerncijfers, dan koersgrafiek met trades, daaronder de waarde, dan de tradelijst. */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --ink:#15202b; --muted:#5d6b7a; --line:#d5dce3;
+  --accent:#2b4fd8; --bench:#a2672a; --up:#13855b; --down:#c23b3b; --soft:#e3e8f6;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10161d; --surface:#18212b; --ink:#e6ecf2; --muted:#93a1b0; --line:#2b3642;
+  --accent:#7d98ff; --bench:#e0a565; --up:#3ccf91; --down:#ff7a7a; --soft:#202c48; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10161d; --surface:#18212b; --ink:#e6ecf2; --muted:#93a1b0; --line:#2b3642;
+  --accent:#7d98ff; --bench:#e0a565; --up:#3ccf91; --down:#ff7a7a; --soft:#202c48; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body)}
+.wrap{max-width:1080px;margin:0 auto;padding-block:28px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:grid;gap:22px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+h1{font:700 clamp(28px,4.5vw,42px)/1.05 var(--display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font:600 12px/1 var(--body);text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin:0 0 12px}
+header p{margin:6px 0 0;color:var(--muted);max-width:68ch}
+header a{color:var(--accent)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;min-width:0}
+.score{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px 0}
+.score>div{padding:2px 18px;border-left:1px solid var(--line)}
+.score>div:first-child{border-left:0;padding-left:0}
+.k{font-size:12.5px;color:var(--muted)}
+.v{font:500 26px/1.2 var(--mono);font-variant-numeric:tabular-nums;margin-top:4px}
+.up{color:var(--up)} .down{color:var(--down)}
+@media (max-width:600px){.score>div{border-left:0;padding-left:0}}
+#price{height:420px} #eq{height:220px}
+@media (max-width:600px){#price{height:320px} #eq{height:180px}}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:8px}
+.legend span::before{content:"";display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:7px;vertical-align:middle;background:currentColor}
+.legend .a{color:var(--accent)} .legend .b{color:var(--bench)} .legend .g{color:var(--up)} .legend .r{color:var(--down)}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:520px}
+th{font:500 11.5px var(--body);text-transform:uppercase;letter-spacing:.07em;color:var(--muted);text-align:left;padding:0 8px 8px 0}
+td{padding:7px 8px 7px 0;border-top:1px solid var(--line)}
+td.r,th.r{text-align:right}
+.note{color:var(--muted);font-size:13.5px;max-width:75ch;margin:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Backtest: de 50-dagenregel op 3 jaar ETH</h1>
+    <p>De regel van <a href="./">Claude de Trader</a> nagespeeld vanaf 15 november 2023 met €1.000: alles in ETH als de dag boven het 50-dagengemiddelde sluit, anders alles in euro. Elke koop en verkoop staat op de grafiek. 0,4% kosten per transactie.</p>
+  </header>
+
+  <section class="panel">
+    <div class="score">
+      <div><div class="k">Met de regel</div><div class="v" id="vRule">—</div></div>
+      <div><div class="k">Gewoon houden</div><div class="v" id="vHold">—</div></div>
+      <div><div class="k">Transacties</div><div class="v" id="vTr">—</div></div>
+      <div><div class="k">Winstgevende rondes</div><div class="v" id="vWin">—</div></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>ETH/EUR dagcandles met de signalen</h2>
+    <div id="price"></div>
+    <div class="legend"><span class="a">50-dagengemiddelde</span><span class="g">▲ koop</span><span class="r">▼ verkoop (met resultaat van die ronde)</span></div>
+  </section>
+
+  <section class="panel">
+    <h2>Waarde van €1.000</h2>
+    <div id="eq"></div>
+    <div class="legend"><span class="a">met de regel</span><span class="b">gewoon houden</span></div>
+  </section>
+
+  <section class="panel">
+    <h2>Alle rondes</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Koop</th><th class="r">Koers</th><th>Verkoop</th><th class="r">Koers</th><th class="r">Dagen</th><th class="r">Resultaat</th><th class="r">Waarde na</th></tr></thead>
+      <tbody id="rows"><tr><td colspan="7" class="note">Laden…</td></tr></tbody>
+    </table></div>
+  </section>
+
+  <p class="note">Let op: deze regel werd gekozen na tests op dezelfde 3 jaar data. Dit resultaat is daardoor optimistisch en geen verwachting voor de toekomst. Geen beleggingsadvies.</p>
+</div>
+
+<script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
+<script>
+const eur=(n,d=0)=>"€"+Number(n).toLocaleString("nl-BE",{minimumFractionDigits:d,maximumFractionDigits:d});
+const date=t=>new Date(t*1000).toLocaleDateString("nl-BE",{day:"numeric",month:"short",year:"2-digit"});
+const el=id=>document.getElementById(id);
+
+fetch("backtest.json",{cache:"no-store"}).then(r=>r.json()).then(b=>{
+  const css=getComputedStyle(document.documentElement), v=n=>css.getPropertyValue(n).trim();
+  const sells=b.trades.filter(t=>t.side==="sell");
+  el("vRule").textContent=eur(b.eind); el("vRule").className="v up";
+  el("vHold").textContent=eur(b.eind_houden);
+  el("vTr").textContent=b.trades.length;
+  el("vWin").textContent=`${sells.filter(t=>t.rend>0).length} van ${sells.length}`;
+
+  // tabel: koop + verkoop als één ronde
+  const rounds=[]; for(let i=0;i<b.trades.length;i++){ if(b.trades[i].side==="buy") rounds.push({buy:b.trades[i],sell:b.trades[i+1]}); }
+  el("rows").innerHTML=rounds.map(r=>`<tr><td>${date(r.buy.t)}</td><td class="r num">${eur(r.buy.px)}</td>
+    <td>${r.sell?date(r.sell.t):"loopt nog"}</td><td class="r num">${r.sell?eur(r.sell.px):"—"}</td>
+    <td class="r num">${r.sell?Math.round((r.sell.t-r.buy.t)/86400):"—"}</td>
+    <td class="r num ${r.sell?(r.sell.rend>0?"up":"down"):""}">${r.sell?(r.sell.rend>0?"+":"")+r.sell.rend.toLocaleString("nl-BE")+"%":"—"}</td>
+    <td class="r num">${r.sell?eur(r.sell.waarde):"—"}</td></tr>`).join("");
+
+  if(!window.LightweightCharts) return;
+  const base={autoSize:true,layout:{background:{color:v("--surface")},textColor:v("--muted"),fontFamily:"IBM Plex Mono, monospace",fontSize:11},
+    grid:{vertLines:{color:v("--line")},horzLines:{color:v("--line")}},rightPriceScale:{borderColor:v("--line"),minimumWidth:70},
+    timeScale:{borderColor:v("--line")},crosshair:{mode:0},
+    localization:{locale:"nl-BE",priceFormatter:p=>"€"+Math.round(p).toLocaleString("nl-BE")}};
+  const pc=LightweightCharts.createChart(el("price"),base);
+  const cs=pc.addCandlestickSeries({upColor:v("--up"),downColor:v("--down"),borderVisible:false,wickUpColor:v("--up"),wickDownColor:v("--down"),priceLineVisible:false});
+  cs.setData(b.candles.map(c=>({time:c[0],open:c[1],high:c[2],low:c[3],close:c[4]})));
+  const ma=pc.addLineSeries({color:v("--accent"),lineWidth:2,priceLineVisible:false,crosshairMarkerVisible:false});
+  ma.setData(b.sma.map(([t,x])=>({time:t,value:x})));
+  cs.setMarkers(b.trades.map(t=>({time:t.t,position:t.side==="buy"?"belowBar":"aboveBar",
+    color:t.side==="buy"?v("--up"):v("--down"),shape:t.side==="buy"?"arrowUp":"arrowDown",
+    text:t.side==="buy"?"":(t.rend>0?"+":"")+t.rend.toFixed(0)+"%"})));
+
+  const ec=LightweightCharts.createChart(el("eq"),base);
+  const es=ec.addLineSeries({color:v("--accent"),lineWidth:2,priceLineVisible:false});
+  es.setData(b.equity.map(([t,x])=>({time:t,value:x})));
+  const hs=ec.addLineSeries({color:v("--bench"),lineWidth:2,priceLineVisible:false});
+  hs.setData(b.hold.map(([t,x])=>({time:t,value:x})));
+
+  // beide grafieken samen laten scrollen en zoomen
+  let busy=false;
+  const sync=(from,to)=>from.timeScale().subscribeVisibleLogicalRangeChange(r=>{ if(busy||!r) return; busy=true; to.timeScale().setVisibleLogicalRange(r); busy=false; });
+  sync(pc,ec); sync(ec,pc);
+  pc.timeScale().fitContent(); ec.timeScale().fitContent();
+}).catch(()=>{ el("rows").innerHTML='<tr><td colspan="7" class="note">De backtestgegevens konden niet geladen worden.</td></tr>'; });
+</script>
+</body>
+</html>
