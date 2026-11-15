@@ -111,3 +111,20 @@ ETH/EUR-dagdata (Binance), cash in euro, 0,4% fee. ETH ging van 1.900 naar 1.608
 Van de 23 rondes (kopen + verkopen) waren er maar 7 winstgevend: veel kleine verliezen door valse signalen, en
 vier grote winsten (feb-apr 2024, mei-jun 2025, jul-sep 2025, jul-okt 2026). **Let op:** de regel is gekozen op
 dezelfde 3 jaar data; dit resultaat is daardoor optimistisch en geen verwachting voor de toekomst.
+
+## Valse signalen wegfilteren? (`filter_test.py`, 15 nov 2026)
+Ontleding van de 23 trades (ETH/EUR, nov 2023 - nu): verliezers duurden mediaan 4 dagen en kochten 0,7% boven het
+gemiddelde; winnaars duurden 56 dagen en kochten 2,2% erboven. De richting van het gemiddelde onderscheidt ze niet.
+Getest met vooraf gekozen waarden, ook op nooit gebruikte data. Eindwaarde tegenover houden:
+
+| filter | ETH nov23-nu (gekozen) | ETH 2018-nov23 (nieuw) | BTC nov23-nu (nieuw) | BTC 2018-nov23 (nieuw) |
+|---|---|---|---|---|
+| geen (bot) | 3,27 | 2,83 | 1,14 | 2,73 |
+| buffer 2% (koop > gem +2%, verkoop < gem -2%) | 2,32 | 5,39 | 1,04 | 2,70 |
+| 2 dagen bevestiging | 1,89 | 5,06 | 1,20 | 2,34 |
+| gemiddelde moet stijgen | 2,36 | 2,24 | 1,19 | 2,84 |
+
+**Lezing:** de basisregel verslaat houden in alle vier de reeksen, ook op data die nooit gebruikt is: een sterkere
+bevestiging dan de eerdere tests. De filters halveren het aantal trades en verhogen het percentage winnende trades,
+maar zijn niet consequent beter: winst in de ene reeks, verlies in de andere. De verliezers zijn op het moment van
+instappen niet te onderscheiden van het begin van een echte trend; ze zijn de prijs voor het meepakken van trends.
