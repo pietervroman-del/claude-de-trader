@@ -789,6 +789,19 @@
         "kern 50% + trend 30 weken": 3605.78,
         "kern 50% + trend 50 dagen": 3605.78
       }
+    },
+    {
+      "id": "r202611210201",
+      "time": "2026-11-21T02:01:06Z",
+      "value": 3887.42,
+      "benchmark": 3248.96,
+      "cash": 3887.42,
+      "positions": {},
+      "note": "Ronde 60: Dagslot 20/11 was 1.619 onder het 50-dagengemiddelde 2.285, dus doel 0% ETH; we staan al volledig in USDC, dus niets gedaan. ETH staat nu 1.624 (RSI 11); het doel slaat pas om bij een dagslot boven ongeveer 2.285, ver weg.",
+      "schaduw": {
+        "kern 50% + trend 30 weken": 3615.72,
+        "kern 50% + trend 50 dagen": 3615.72
+      }
     }
   ],
   "plan": null,
