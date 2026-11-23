@@ -1010,6 +1010,19 @@
         "kern 50% + trend 30 weken": 3761.33,
         "kern 50% + trend 50 dagen": 3761.33
       }
+    },
+    {
+      "id": "r202611232201",
+      "time": "2026-11-23T22:01:15Z",
+      "value": 3887.42,
+      "benchmark": 3441.88,
+      "cash": 3887.42,
+      "positions": {},
+      "note": "Ronde 77: Dagslot 22/11 was 1.721, onder het 50-dagengemiddelde 2.246, dus doel 0% ETH; we staan al volledig in USDC, niets gedaan. Het doel slaat pas om bij een dagslot boven ongeveer 2.246 USDC, ver boven de huidige 1.721.",
+      "schaduw": {
+        "kern 50% + trend 30 weken": 3714.79,
+        "kern 50% + trend 50 dagen": 3714.79
+      }
     }
   ],
   "plan": null,
