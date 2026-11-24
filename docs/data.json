@@ -1,14 +1,14 @@
 {
  "start_eur": 4050.12,
  "started": "2026-11-10T17:53:26Z",
- "updated": "2026-11-23T22:01:15Z",
+ "updated": "2026-11-24T02:01:12Z",
  "fee": 0.004,
  "quote": "USDC",
  "start_qty": 2.0,
- "value_in_coin": 2.258894,
+ "value_in_coin": 2.283334,
  "cash": 3887.42,
  "value": 3887.42,
- "benchmark": 3441.88,
+ "benchmark": 3405.04,
  "benchmark_coin": "ETH",
  "tradable": [
   "ETH"
@@ -17,48 +17,48 @@
  "market": [
   {
    "coin": "BTC",
-   "price": 61223.1,
-   "ch24": 0.09
+   "price": 60958.1,
+   "ch24": -0.39
   },
   {
    "coin": "ETH",
-   "price": 1720.73,
-   "ch24": -0.08
+   "price": 1703.28,
+   "ch24": -0.26
   },
   {
    "coin": "SOL",
-   "price": 72.24,
-   "ch24": 2.28
+   "price": 71.72,
+   "ch24": -0.29
   },
   {
    "coin": "XRP",
-   "price": 0.94191,
-   "ch24": 1.55
+   "price": 0.94635,
+   "ch24": 0.74
   },
   {
    "coin": "ADA",
-   "price": 0.147996,
-   "ch24": 2.35
+   "price": 0.149172,
+   "ch24": 0.49
   },
   {
    "coin": "DOGE",
-   "price": 0.0566127,
-   "ch24": 2.4
+   "price": 0.0566553,
+   "ch24": 0.62
   },
   {
    "coin": "LINK",
-   "price": 9.00556,
-   "ch24": 2.21
+   "price": 9.05312,
+   "ch24": 0.54
   },
   {
    "coin": "AVAX",
-   "price": 6.799,
-   "ch24": 1.75
+   "price": 6.803,
+   "ch24": 0.38
   },
   {
    "coin": "DOT",
-   "price": 0.6775,
-   "ch24": 2.53
+   "price": 0.6764,
+   "ch24": 0.13
   }
  ],
  "trades": [
@@ -1075,6 +1075,19 @@
     "kern 50% + trend 30 weken": 3714.79,
     "kern 50% + trend 50 dagen": 3714.79
    }
+  },
+  {
+   "id": "r202611240201",
+   "time": "2026-11-24T02:01:12Z",
+   "value": 3887.42,
+   "benchmark": 3405.04,
+   "cash": 3887.42,
+   "positions": {},
+   "note": "Ronde 78: Dagslot 23/11 was 1.709, onder het 50-dagengemiddelde 2.226, dus doel 0% ETH; we staan al op 0% en doen niets. Het doel slaat pas om bij een dagslot boven ca. 2.226 USDC, ver boven de huidige koers van 1.703.",
+   "schaduw": {
+    "kern 50% + trend 30 weken": 3695.87,
+    "kern 50% + trend 50 dagen": 3695.87
+   }
   }
  ],
  "plan": null,
@@ -1099,27 +1112,19 @@
  },
  "strategie": {
   "regel": "kern 0% + trend 50 dagen",
-  "sma": 2245.99,
-  "slot": 1721.45,
+  "sma": 2225.63,
+  "slot": 1708.64,
   "boven": false,
   "doel_eth": 0.0,
   "nu_eth": 0.0,
   "criterium": "Op 14 mei 2027 is de portefeuille meer dan 2 ETH waard én meer dan beide schaduwportefeuilles (kern 50% + 30 weken, en kern 50% + 50 dagen)."
  },
  "schaduwen": {
-  "kern 50% + trend 30 weken": 3714.79,
-  "kern 50% + trend 50 dagen": 3714.79
+  "kern 50% + trend 30 weken": 3695.87,
+  "kern 50% + trend 50 dagen": 3695.87
  },
  "grafiek": {
   "dagen": [
-   [
-    1763856000,
-    2767.09,
-    2856.78,
-    2767.08,
-    2801.0,
-    3692.6
-   ],
    [
     1763942400,
     2801.0,
@@ -4031,6 +4036,14 @@
     1645.0,
     1721.45,
     2245.99
+   ],
+   [
+    1795392000,
+    1721.61,
+    1843.93,
+    1693.91,
+    1708.64,
+    2225.63
    ]
   ],
   "sma_dagen": 50,
